@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPSU Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Hover Trigger Zone */
+        .hover-trigger {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 15px;
+            z-index: 1001;
+        }
+
+        /* Top Navigation Bar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            padding: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .hover-trigger:hover+.topbar,
+        .topbar:hover {
+            transform: translateY(0);
+        }
+
+        .topbar-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            margin: -0.5rem -1rem;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .logo h1 {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        /* Menu Navigation */
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            list-style: none;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            font-size: 1rem;
+        }
+
+        /* Dropdown Menu */
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            color: rgba(255, 255, 255, 0.85);
+            background: none;
+            border: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .nav-dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .nav-dropdown-toggle.active {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        .dropdown-arrow {
+            font-size: 0.7rem;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .nav-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            min-width: 240px;
+            padding: 0.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            z-index: 100;
+        }
+
+        .nav-dropdown:hover .nav-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .dropdown-item:hover {
+            background: var(--bg-primary);
+            color: var(--primary);
+        }
+
+        .dropdown-item.active {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .dropdown-icon {
+            font-size: 1rem;
+        }
+
+        /* Menu hint */
+        .menu-hint {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 0 0 8px 8px;
+            font-size: 0.75rem;
+            opacity: 0.7;
+            z-index: 999;
+            transition: opacity 0.3s ease;
+        }
+
+        .hover-trigger:hover~.menu-hint,
+        .topbar:hover~.menu-hint {
+            opacity: 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            min-height: 100vh;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Tabs */
+        .module-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0;
+        }
+
+        .module-tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .module-tab:hover {
+            color: var(--primary);
+        }
+
+        .module-tab.active {
+            color: var(--primary);
+        }
+
+        .module-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .dashboard-grid .card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Vision Mission Section */
+        .vision-mission-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .vm-item {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .vm-item.visi {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+
+        .vm-item.misi {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        }
+
+        .vm-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .vm-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .vm-content {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            line-height: 1.7;
+        }
+
+        .vm-content ul {
+            list-style: none;
+            text-align: left;
+            margin-top: 0.5rem;
+        }
+
+        .vm-content li {
+            padding: 0.25rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .vm-content li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+        }
+
+        /* Needs Section */
+        .needs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .need-item {
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .need-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .need-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .need-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .need-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Conclusion Section */
+        .conclusion-content {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .conclusion-content p {
+            margin-bottom: 1rem;
+        }
+
+        .conclusion-highlight {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            margin: 1.5rem 0;
+        }
+
+        .conclusion-highlight p {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Mermaid Diagram Container with Zoom */
+        .mermaid-container {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .zoom-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .zoom-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .zoom-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .zoom-level {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .mermaid-wrapper {
+            overflow: auto;
+            max-height: 70vh;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .mermaid-inner {
+            transform-origin: top left;
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+
+        /* Analysis Section */
+        .analysis-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            background: #f8fafc;
+        }
+
+        .analysis-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .analysis-content h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .analysis-content p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Prototype Section */
+        .prototype-container {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 2px dashed var(--border-color);
+        }
+
+        .prototype-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .prototype-header h3 {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .prototype-mockup {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .mockup-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mockup-title {
+            font-weight: 600;
+        }
+
+        .mockup-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .mockup-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .mockup-content {
+            padding: 1.5rem;
+        }
+
+        .mockup-form-group {
+            margin-bottom: 1rem;
+        }
+
+        .mockup-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .mockup-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: #f8fafc;
+        }
+
+        .mockup-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: #f8fafc;
+        }
+
+        .mockup-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: #f8fafc;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .mockup-submit {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .mockup-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0;
+        }
+
+        .mockup-table th,
+        .mockup-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        .mockup-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        .mockup-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .mockup-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .mockup-status.approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .mockup-status.rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .topbar-inner {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .mockup-grid,
+            .dashboard-grid,
+            .vision-mission-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .needs-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .needs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Hover Trigger Zone -->
+    <div class="hover-trigger"></div>
+
+    <!-- Top Navigation Bar -->
+    <nav class="topbar">
+        <div class="topbar-inner">
+            <div class="logo" onclick="showDashboard()">
+                <span class="logo-icon">📊</span>
+                <h1>PPSU Dashboard</h1>
+            </div>
+
+            <ul class="nav-menu">
+                <!-- Modul Dropdown -->
+                <li class="nav-dropdown">
+                    <button class="nav-dropdown-toggle" id="modul-dropdown-toggle">
+                        <span class="nav-icon">📦</span>
+                        Modul
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="nav-dropdown-menu" id="module-menu">
+                        <!-- Submenu akan di-generate otomatis dari file modul -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Menu Hint -->
+    <div class="menu-hint">↑ Arahkan ke atas untuk menu</div>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+        <!-- Dashboard Section -->
+        <div id="dashboard-content">
+            <header class="page-header">
+                <div class="breadcrumb">
+                    <span>Dashboard</span>
+                </div>
+                <h1 class="page-title">PT Pembangunan Prasarana Sumatera Utara (Perseroda)</h1>
+                <p class="page-subtitle">BUMD Pemprov SUMUT - Sistem Informasi Terintegrasi Tingkat Enterprise</p>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- Profil Perusahaan -->
+                <div class="card full-width">
+                    <div class="card-header">
+                        <h3 class="card-title">🏢 Tentang Perusahaan</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="company-intro" style="margin-bottom: 1.5rem;">
+                            <p style="font-size: 1.05rem; line-height: 1.8; margin-bottom: 1rem;">
+                                <strong>PT Pembangunan Prasarana Sumatera Utara (Perseroda)</strong> merupakan
+                                <strong>BUMD Pemprov SUMUT</strong> pada bidang aneka jasa dengan karakteristik
+                                <strong>multi-unit bisnis</strong>.
+                            </p>
+                        </div>
+                        <div class="needs-grid">
+                            <div class="need-item" style="text-align: left;">
+                                <div class="need-icon">🚢</div>
+                                <div class="need-title">Unit Transportasi</div>
+                                <div class="need-desc">Pengoperasian Kapal Motor Penyeberangan (KMP) SUMUT I dan II di
+                                    Danau Toba</div>
+                            </div>
+                            <div class="need-item" style="text-align: left;">
+                                <div class="need-icon">🎪</div>
+                                <div class="need-title">Unit PRSU</div>
+                                <div class="need-desc">Pengelolaan areal Pekan Raya Sumatera Utara (PRSU)</div>
+                            </div>
+                            <div class="need-item" style="text-align: left;">
+                                <div class="need-icon">🏗️</div>
+                                <div class="need-title">Unit Teknik & Pengembangan</div>
+                                <div class="need-desc">Jasa perencanaan dan konstruksi bangunan</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tuntutan Tata Kelola & Masalah -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">⚖️ Tuntutan Tata Kelola</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="analysis-item">
+                            <div class="analysis-icon" style="background: #dbeafe; color: #2563eb;">📋</div>
+                            <div class="analysis-content">
+                                <h4>Penerapan Prinsip GCG</h4>
+                                <p>Good Corporate Governance untuk transparansi dan akuntabilitas</p>
+                            </div>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-icon" style="background: #fef3c7; color: #d97706;">⚠️</div>
+                            <div class="analysis-content">
+                                <h4>Risk-based Management</h4>
+                                <p>Manajemen berbasis risiko untuk pengendalian operasional</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">🚨 Masalah Utama</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="analysis-item">
+                            <div class="analysis-icon" style="background: #fee2e2; color: #dc2626;">💰</div>
+                            <div class="analysis-content">
+                                <h4>Aplikasi Berbayar dengan Masa Berlaku</h4>
+                                <p>Sistem saat ini menggunakan aplikasi pihak eksternal berbayar</p>
+                            </div>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-icon" style="background: #fee2e2; color: #dc2626;">🔗</div>
+                            <div class="analysis-content">
+                                <h4>Sistem Belum Terintegrasi</h4>
+                                <p>Data tersebar dan tidak terhubung antar unit bisnis</p>
+                            </div>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-icon" style="background: #fee2e2; color: #dc2626;">⚙️</div>
+                            <div class="analysis-content">
+                                <h4>Otomatisasi Masih Rendah</h4>
+                                <p>Banyak pekerjaan dilakukan secara manual</p>
+                            </div>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-icon" style="background: #fee2e2; color: #dc2626;">🛡️</div>
+                            <div class="analysis-content">
+                                <h4>Risiko Operasional & Fraud</h4>
+                                <p>Risiko operasional dan fraud cukup tinggi</p>
+                            </div>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-icon" style="background: #fee2e2; color: #dc2626;">📊</div>
+                            <div class="analysis-content">
+                                <h4>Data Sulit Diakses Real-time</h4>
+                                <p>Data sulit ditarik real-time untuk Direksi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visi Sistem Informasi -->
+                <div class="card full-width">
+                    <div class="card-header">
+                        <h3 class="card-title">🎯 Visi Sistem Informasi PPSU</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="conclusion-highlight" style="margin-top: 0;">
+                            <p style="font-size: 1.1rem;">
+                                PPSU membutuhkan <strong>Sistem Informasi Terintegrasi tingkat Enterprise
+                                    (Enterprise Integrated Information System)</strong>, bukan aplikasi parsial.
+                            </p>
+                        </div>
+                        <p style="margin: 1rem 0 0.75rem; font-weight: 600;">Karakter Sistem yang Diminta:</p>
+                        <div class="needs-grid" style="grid-template-columns: repeat(4, 1fr);">
+                            <div class="need-item">
+                                <div class="need-icon">🔄</div>
+                                <div class="need-title">Terintegrasi & Otomatisasi</div>
+                            </div>
+                            <div class="need-item">
+                                <div class="need-icon">📦</div>
+                                <div class="need-title">Modular per Unit Bisnis</div>
+                            </div>
+                            <div class="need-item">
+                                <div class="need-icon">⚡</div>
+                                <div class="need-title">Efektif, Efisien, Ekonomis</div>
+                            </div>
+                            <div class="need-item">
+                                <div class="need-icon">🔍</div>
+                                <div class="need-title">Mendukung CACM</div>
+                                <div class="need-desc">Continuous Audit Continuous Monitoring</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daftar 8 Sistem -->
+                <div class="card full-width">
+                    <div class="card-header">
+                        <h3 class="card-title">📋 Daftar Sistem & Modul yang Diperlukan</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="systems-grid"
+                            style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+
+                            <!-- 1. Dashboard Top Management -->
+                            <div class="system-card"
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.25rem; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <span style="font-size: 1.5rem;">📊</span>
+                                    <h4 style="margin: 0; font-size: 1rem;">1. Dashboard Top Management</h4>
+                                </div>
+                                <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem; opacity: 0.95;">
+                                    <li>Kinerja keuangan & unit bisnis real-time</li>
+                                    <li>Budget vs Aktual (KPI) + Early Warning</li>
+                                    <li>Risiko utama & temuan audit</li>
+                                    <li>Saldo bank/giro & modul approval</li>
+                                </ul>
+                            </div>
+
+                            <!-- 2. Sistem Kesekretariatan -->
+                            <div class="system-card"
+                                style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 1.25rem; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <span style="font-size: 1.5rem;">📝</span>
+                                    <h4 style="margin: 0; font-size: 1rem;">2. Sistem Kesekretariatan</h4>
+                                </div>
+                                <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem; opacity: 0.95;">
+                                    <li>Nomor surat otomatis (masuk/keluar)</li>
+                                    <li>Disposisi digital direksi</li>
+                                    <li>Arsip digital (akta, kontrak, surat)</li>
+                                    <li>Manajemen rapat, kontrak & legal</li>
+                                </ul>
+                            </div>
+
+                            <!-- 3. Sistem Keuangan -->
+                            <div class="system-card"
+                                style="background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); color: white; padding: 1.25rem; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <span style="font-size: 1.5rem;">💰</span>
+                                    <h4 style="margin: 0; font-size: 1rem;">3. Sistem Keuangan <span
+                                            style="background: rgba(255,255,255,0.3); padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">URGENT</span>
+                                    </h4>
+                                </div>
+                                <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem; opacity: 0.95;">
+                                    <li>Lap. Keuangan sesuai standar akuntansi</li>
+                                    <li>General Ledger & Budget Control</li>
+                                    <li>AP/AR, Kas/Bank, Aset & Penyusutan</li>
+                                    <li>Pendapatan per unit & Audit Trail</li>
+                                </ul>
+                            </div>
+
+                            <!-- 4. Sistem Bagian Umum -->
+                            <div class="system-card"
+                                style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 1.25rem; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <span style="font-size: 1.5rem;">🏢</span>
+                                    <h4 style="margin: 0; font-size: 1rem;">4. Sistem Bagian Umum</h4>
+                                </div>
+                                <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem; opacity: 0.95;">
+                                    <li>Manajemen aset (gedung, kendaraan)</li>
+                                    <li>Logistik RTK & persediaan umum</li>
+                                    <li>Pengadaan barang dan jasa</li>
+                                    <li>Vendor management</li>
+                                </ul>
+                            </div>
+
+                            <!-- 5. Sistem Human Capital -->
+                            <div class="system-card"
+                                style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.25rem; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <span style="font-size: 1.5rem;">👥</span>
+                                    <h4 style="margin: 0; font-size: 1rem;">5. Sistem Human Capital <span
+                                            style="background: rgba(255,255,255,0.3); padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">URGENT</span>
+                                    </h4>
+                                </div>
+                                <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem; opacity: 0.95;">
+                                    <li>Presensi, kepegawaian & cuti</li>
+                                    <li>Payroll & perhitungan PPh 21</li>
+                                    <li>KPI karyawan & merit system</li>
+                                    <li>Monitoring disiplin & sanksi</li>
+                                </ul>
+                            </div>
+
+                            <!-- 6. Sistem Operasional -->
+                            <div class="system-card"
+                                style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #333; padding: 1.25rem; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <span style="font-size: 1.5rem;">⚙️</span>
+                                    <h4 style="margin: 0; font-size: 1rem;">6. Sistem Operasional</h4>
+                                </div>
+                                <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem;">
+                                    <li><strong>Transportasi:</strong> Tiket online, jadwal, BBM, log kapal</li>
+                                    <li><strong>PRSU:</strong> Booking, tarif, invoice, okupansi</li>
+                                    <li><strong>Teknik:</strong> Project mgmt, PBJ, log konstruksi</li>
+                                </ul>
+                            </div>
+
+                            <!-- 7. Sistem Manajemen Risiko -->
+                            <div class="system-card"
+                                style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; padding: 1.25rem; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <span style="font-size: 1.5rem;">🛡️</span>
+                                    <h4 style="margin: 0; font-size: 1rem;">7. Sistem Manajemen Risiko</h4>
+                                </div>
+                                <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem;">
+                                    <li>Risk register & risk assessment</li>
+                                    <li>Monitoring pengelolaan MR</li>
+                                    <li>Arsip digital</li>
+                                    <li>Integrasi dengan operasional & keuangan</li>
+                                </ul>
+                            </div>
+
+                            <!-- 8. Sistem CACM -->
+                            <div class="system-card"
+                                style="background: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%); color: #333; padding: 1.25rem; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <span style="font-size: 1.5rem;">🔍</span>
+                                    <h4 style="margin: 0; font-size: 1rem;">8. Continuous Audit & Monitoring</h4>
+                                </div>
+                                <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem;">
+                                    <li>Audit universe & RKPT</li>
+                                    <li>Red flag otomatis & sampling transaksi</li>
+                                    <li>Monitoring tindak lanjut</li>
+                                    <li>Dashboard temuan & arsip digital</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Module Content -->
+        <div id="module-content"></div>
+    </main>
+
+    <!-- Module Scripts -->
+    <script src="modules/modul0.js"></script>
+    <script src="modules/modul2.js"></script>
+    <script src="modules/modul3.js"></script>
+    <script src="modules/modul4.js"></script>
+    <script src="modules/modul5.js"></script>
+    <script src="modules/modul6.js"></script>
+    <script src="modules/modul7.js"></script>
+    <script src="modules/modul8.js"></script>
+    <script src="modules/modul9.js"></script>
+    <script src="modules/modul10.js"></script>
+
+    <script>
+        // Initialize modules array
+        window.ppsuModules = window.ppsuModules || [];
+
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'neutral',
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+
+        // Current state
+        let currentModule = null;
+        let currentTab = 'analisa';
+        let currentZoom = 1;
+        let currentView = 'dashboard';
+
+        // Generate submenu from loaded modules
+        function generateMenu() {
+            const menuContainer = document.getElementById('module-menu');
+            menuContainer.innerHTML = '';
+
+            window.ppsuModules.forEach((mod) => {
+                const menuItem = document.createElement('a');
+                menuItem.className = 'dropdown-item';
+                menuItem.dataset.module = mod.id;
+                menuItem.onclick = function () { showModule(mod.id); };
+                menuItem.innerHTML = `
+                    <span class="dropdown-icon">${mod.icon}</span>
+                    ${mod.menuTitle}
+                `;
+                menuContainer.appendChild(menuItem);
+            });
+        }
+
+        // Show Dashboard
+        function showDashboard() {
+            currentView = 'dashboard';
+            document.getElementById('dashboard-content').style.display = 'block';
+            document.getElementById('module-content').innerHTML = '';
+
+            // Clear dropdown active
+            document.getElementById('modul-dropdown-toggle').classList.remove('active');
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+
+        // Zoom functions
+        function zoomIn(moduleId) {
+            currentZoom = Math.min(currentZoom + 0.25, 3);
+            applyZoom(moduleId);
+        }
+
+        function zoomOut(moduleId) {
+            currentZoom = Math.max(currentZoom - 0.25, 0.25);
+            applyZoom(moduleId);
+        }
+
+        function resetZoom(moduleId) {
+            currentZoom = 1;
+            applyZoom(moduleId);
+        }
+
+        function applyZoom(moduleId) {
+            const inner = document.getElementById(`${moduleId}-mermaid-inner`);
+            const zoomLevel = document.getElementById(`${moduleId}-zoom-level`);
+            if (inner) {
+                inner.style.transform = `scale(${currentZoom})`;
+            }
+            if (zoomLevel) {
+                zoomLevel.textContent = `${Math.round(currentZoom * 100)}%`;
+            }
+        }
+
+        // Render module content
+        function renderModule(mod) {
+            document.getElementById('dashboard-content').style.display = 'none';
+
+            const content = `
+                <header class="page-header">
+                    <div class="breadcrumb">
+                        <span>Dashboard</span>
+                        <span>/</span>
+                        <span>Modul</span>
+                        <span>/</span>
+                        <span>${mod.id}</span>
+                    </div>
+                    <h1 class="page-title">${mod.title}</h1>
+                    <p class="page-subtitle">${mod.subtitle}</p>
+                </header>
+
+                <div class="module-tabs">
+                    <button class="module-tab ${currentTab === 'analisa' ? 'active' : ''}" onclick="switchTab('${mod.id}', 'analisa')">📊 Hasil Analisa</button>
+                    <button class="module-tab ${currentTab === 'diagram' ? 'active' : ''}" onclick="switchTab('${mod.id}', 'diagram')">🔀 Diagram Alur</button>
+                    <button class="module-tab ${currentTab === 'prototype' ? 'active' : ''}" onclick="switchTab('${mod.id}', 'prototype')">🖥️ Prototype</button>
+                </div>
+
+                <div id="${mod.id}-analisa" class="tab-content ${currentTab === 'analisa' ? 'active' : ''}">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">${mod.analisa.title}</h3>
+                        </div>
+                        <div class="card-body">
+                            ${mod.analisa.items.map(item => `
+                                <div class="analysis-item">
+                                    <div class="analysis-icon" style="background: ${item.iconBg}; color: ${item.iconColor};">${item.icon}</div>
+                                    <div class="analysis-content">
+                                        <h4>${item.title}</h4>
+                                        <p>${item.content}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="${mod.id}-diagram" class="tab-content ${currentTab === 'diagram' ? 'active' : ''}">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">${mod.diagram.title}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mermaid-container">
+                                <div class="zoom-controls">
+                                    <button class="zoom-btn" onclick="zoomOut('${mod.id}')">➖ Zoom Out</button>
+                                    <span class="zoom-level" id="${mod.id}-zoom-level">100%</span>
+                                    <button class="zoom-btn" onclick="zoomIn('${mod.id}')">➕ Zoom In</button>
+                                    <button class="zoom-btn" onclick="resetZoom('${mod.id}')" style="margin-left: 0.5rem;">🔄 Reset</button>
+                                </div>
+                                <div class="mermaid-wrapper">
+                                    <div class="mermaid-inner" id="${mod.id}-mermaid-inner">
+                                        <div id="${mod.id}-mermaid" class="mermaid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="${mod.id}-prototype" class="tab-content ${currentTab === 'prototype' ? 'active' : ''}">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">${mod.prototype.title}</h3>
+                        </div>
+                        <div class="card-body">
+                            ${mod.prototype.html}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('module-content').innerHTML = content;
+            currentZoom = 1;
+            renderMermaidDiagram(mod.id, mod.diagram.mermaid);
+        }
+
+        // Render Mermaid diagram
+        async function renderMermaidDiagram(moduleId, diagramCode) {
+            try {
+                const { svg } = await mermaid.render(`mermaid-${moduleId}-${Date.now()}`, diagramCode);
+                const container = document.getElementById(`${moduleId}-mermaid`);
+                if (container) {
+                    container.innerHTML = svg;
+                }
+            } catch (e) {
+                console.error(`Error rendering diagram for ${moduleId}:`, e);
+                const container = document.getElementById(`${moduleId}-mermaid`);
+                if (container) {
+                    container.innerHTML = '<p style="color: red;">Error rendering diagram</p>';
+                }
+            }
+        }
+
+        // Show module
+        function showModule(moduleId) {
+            const mod = window.ppsuModules.find(m => m.id === moduleId);
+            if (!mod) return;
+
+            currentView = 'module';
+            currentModule = mod;
+            currentTab = 'analisa';
+
+            // Update dropdown active
+            document.getElementById('modul-dropdown-toggle').classList.add('active');
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.module === moduleId) {
+                    item.classList.add('active');
+                }
+            });
+
+            renderModule(mod);
+        }
+
+        // Switch tab within module
+        function switchTab(moduleId, tabName) {
+            currentTab = tabName;
+
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.querySelectorAll('.module-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            const targetTab = document.getElementById(`${moduleId}-${tabName}`);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+
+            event.target.classList.add('active');
+
+            if (tabName === 'diagram' && currentModule) {
+                currentZoom = 1;
+                renderMermaidDiagram(currentModule.id, currentModule.diagram.mermaid);
+            }
+        }
+
+        // Initialize app
+        function init() {
+            generateMenu();
+            showDashboard();
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+
+</html>
