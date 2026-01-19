@@ -107,13 +107,64 @@ FR-SK-034: Sistem mencatat siapa yang mengakses dokumen
 
 ### 4.5 Manajemen Rapat
 
+> [!IMPORTANT]
+> Manajemen rapat mengelola seluruh lifecycle rapat dari penjadwalan hingga follow-up action items
+
 ```
-FR-SK-040: Sistem dapat menjadwalkan rapat dengan undangan
-FR-SK-041: Sistem mengirim reminder rapat (H-1, H-0)
-FR-SK-042: Sistem dapat mencatat notulen rapat
-FR-SK-043: Sistem dapat melampirkan materi rapat
-FR-SK-044: Sistem dapat tracking action item dari rapat
+FR-SK-040: Sistem dapat menjadwalkan rapat dengan kalender interaktif
+FR-SK-041: Sistem dapat booking ruangan rapat (cek ketersediaan)
+FR-SK-042: Sistem dapat generate undangan dengan detail agenda
+FR-SK-043: Peserta dapat konfirmasi kehadiran (RSVP)
+FR-SK-044: Sistem mengirim reminder rapat (H-1, H-0, 1 jam sebelum)
+FR-SK-045: Sistem dapat mencatat notulen rapat dengan template
+FR-SK-046: Sistem dapat melampirkan materi rapat (presentasi, dokumen)
+FR-SK-047: Sistem dapat assign action items ke peserta dengan deadline
+FR-SK-048: Sistem dapat tracking progress action items
+FR-SK-049: Sistem mengirim reminder untuk action items pending
+FR-SK-050: Notulen dan action items otomatis tersimpan ke arsip
 ```
+
+**Komponen Manajemen Rapat:**
+
+| Komponen | Deskripsi | Fitur |
+|----------|-----------|-------|
+| 📅 **Kalender** | Jadwal rapat visual | Filter per unit, cari slot kosong |
+| 🏢 **Ruangan** | Booking meeting room | Cek availability, kapasitas |
+| 📨 **Undangan** | Generate & kirim undangan | Email/notifikasi, RSVP |
+| 📝 **Notulen** | Catatan hasil rapat | Template, editor, lampiran |
+| ☑️ **Action Items** | Tugas dari rapat | PIC, deadline, status |
+| 📈 **Follow-up** | Tracking progress | Reminder, eskalasi |
+
+**Form Jadwal Rapat:**
+
+| Field | Type | Required | Keterangan |
+|-------|------|:--------:|------------|
+| Judul Rapat | Text | ✅ | Nama/topik rapat |
+| Tanggal & Waktu | Datetime | ✅ | Pilih dari kalender |
+| Durasi | Select | ✅ | 30 menit / 1 jam / 2 jam |
+| Ruangan | Dropdown | ✅ | Pilih ruang meeting |
+| Peserta | Multi-select | ✅ | Pilih dari master user |
+| Agenda | Textarea | ✅ | Daftar agenda rapat |
+| Materi | File Upload | ❍ | Lampirkan presentasi |
+| Catatan | Textarea | ❍ | Instruksi khusus |
+
+**Status Action Item:**
+
+| Status | Warna | Deskripsi |
+|--------|:-----:|-----------|
+| Pending | 🟡 | Belum dikerjakan |
+| In Progress | 🔵 | Sedang dikerjakan |
+| Done | 🟢 | Selesai, menunggu verifikasi |
+| Verified | ✅ | Diverifikasi complete |
+| Overdue | 🔴 | Melewati deadline |
+
+**Contoh Action Item:**
+
+| No | Action Item | PIC | Deadline | Status |
+|----|-------------|-----|----------|--------|
+| 1 | Siapkan proposal kerjasama | Budi | 25 Jan 2026 | 🔵 In Progress |
+| 2 | Follow-up vendor payment | Ani | 22 Jan 2026 | 🔴 Overdue |
+| 3 | Review dokumen tender | Dedi | 28 Jan 2026 | 🟡 Pending |
 
 ### 4.6 Manajemen Kontrak & Legal
 
@@ -329,7 +380,15 @@ Implementasi modul ini diharapkan dapat:
 - Meningkatkan kecepatan disposisi hingga **65%**
 - Menyediakan data real-time untuk dashboard manajemen
 
+Fitur unggulan:
+- ✉️ **Surat Masuk/Keluar** - Registrasi otomatis, disposisi digital
+- 📁 **Arsip Digital** - Full-text search, kategorisasi
+- 📅 **Manajemen Rapat** - Kalender, booking ruangan, notulen, action items
+- 📝 **Kontrak & Legal** - Monitoring expired, alert H-30
+- 📈 **Tracking** - Disposisi, action items, deadline
+
 ---
 
 *Dokumen ini disusun sebagai bagian dari analisis sistem PT PPSU Perseroda*
-*Versi: 1.0 | Tanggal: 17 Januari 2026*
+*Versi: 2.0 | Tanggal: 19 Januari 2026*
+*Update: Penambahan detail Manajemen Rapat*

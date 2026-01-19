@@ -140,6 +140,171 @@ FR-TR-054: Sistem generate laporan pendapatan harian
 FR-TR-055: Sistem dapat rekonsiliasi otomatis dengan bank
 ```
 
+### 4.7 Manajemen BBM (Bahan Bakar)
+
+> [!IMPORTANT]
+> Tracking konsumsi BBM untuk efisiensi biaya operasional dan perencanaan
+
+```
+FR-TR-060: Sistem dapat mencatat pengisian BBM per kapal
+FR-TR-061: Sistem mencatat data supplier BBM
+FR-TR-062: Sistem mencatat harga BBM per liter
+FR-TR-063: Sistem menghitung konsumsi BBM per trip
+FR-TR-064: Sistem menghitung rasio konsumsi (liter/km atau liter/jam)
+FR-TR-065: Dashboard menampilkan trend konsumsi BBM
+FR-TR-066: Sistem alert jika konsumsi melebihi standar
+FR-TR-067: Sistem forecast kebutuhan BBM bulanan
+FR-TR-068: Setiap pembelian BBM otomatis jurnal ke Keuangan
+```
+
+**Form Pengisian BBM:**
+
+| Field | Type | Required | Keterangan |
+|-------|------|:--------:|------------|
+| Kapal | Dropdown | ✅ | Pilih armada |
+| Tanggal Pengisian | Datetime | ✅ | Timestamp |
+| Supplier | Dropdown | ✅ | SPBU / Agen |
+| Volume (Liter) | Number | ✅ | Jumlah liter |
+| Harga per Liter | Currency | ✅ | Rp/liter |
+| Total Harga | Currency | Auto | Auto-calculate |
+| No. Struk/Bon | Text | ✅ | Bukti pembelian |
+| Jam Mesin (Hour Meter) | Number | ✅ | Untuk hitung konsumsi |
+| Petugas | Dropdown | ✅ | Yang melakukan |
+| Foto Bukti | File | ❌ | Upload struk |
+
+**KPI BBM:**
+
+| KPI | Target | Alert |
+|-----|--------|-------|
+| Konsumsi per Trip | < 150 L | 🟡 > 150 L, 🔴 > 180 L |
+| Rasio Liter/Jam | < 25 L/jam | 🟡 > 25 L, 🔴 > 30 L |
+| Variance vs Budget | < 10% | 🔴 > 10% |
+
+### 4.8 Manajemen Maintenance Kapal
+
+```
+FR-TR-070: Sistem dapat scheduling maintenance berkala (preventive)
+FR-TR-071: Sistem dapat mencatat maintenance request (corrective)
+FR-TR-072: Sistem dapat checklist item maintenance
+FR-TR-073: Sistem alert reminder maintenance yang akan jatuh tempo
+FR-TR-074: Sistem mencatat histori maintenance per kapal
+FR-TR-075: Sistem mencatat biaya maintenance
+FR-TR-076: Dashboard menampilkan status maintenance armada
+FR-TR-077: Integrasi dengan Modul Risiko jika maintenance overdue
+FR-TR-078: Setiap biaya maintenance jurnal ke Keuangan
+```
+
+**Jenis Maintenance:**
+
+| Type | Periode | Contoh |
+|------|---------|--------|
+| 🔵 **Daily Check** | Setiap hari | Cek oli, BBM, kondisi umum |
+| 🟢 **Weekly** | Mingguan | Pembersihan, cek kelistrikan |
+| 🟡 **Monthly** | Bulanan | Service minor, ganti filter |
+| 🟠 **Quarterly** | 3 bulan | Service major, cek mesin |
+| 🔴 **Annual** | Tahunan | Docking, sertifikasi ulang |
+
+**Checklist Daily Maintenance:**
+
+| Item | Status | By |
+|------|:------:|:--:|
+| ☐ Cek level oli mesin | ✅/❌ | Nakhoda |
+| ☐ Cek BBM cukup | ✅/❌ | Nakhoda |
+| ☐ Cek alat keselamatan | ✅/❌ | Crew |
+| ☐ Cek kondisi life jacket | ✅/❌ | Crew |
+| ☐ Cek CCTV berfungsi | ✅/❌ | Operator |
+| ☐ Cek GPS tracker aktif | ✅/❌ | Operator |
+| ☐ Kebersihan kapal | ✅/❌ | Crew |
+
+**Status Maintenance:**
+
+| Status | Warna | Aksi |
+|--------|:-----:|------|
+| Scheduled | 🔵 | Dalam rencana |
+| Upcoming (< 7 hari) | 🟡 | Alert reminder |
+| Overdue | 🔴 | Block operasi + alert ke Risiko |
+| In Progress | 🟠 | Kapal non-aktif |
+| Completed | 🟢 | Kembali aktif |
+
+### 4.9 Log Operasional Kapal
+
+> [!IMPORTANT]
+> Catatan sistematis, kronologis, dan terdokumentasi atas seluruh aktivitas 
+> operasional kapal termasuk penerapan K3 dan manajemen risiko
+
+```
+FR-TR-080: Sistem mencatat log keberangkatan dan kedatangan
+FR-TR-081: Sistem mencatat kondisi cuaca setiap trip
+FR-TR-082: Sistem mencatat jumlah penumpang aktual naik/turun
+FR-TR-083: Sistem mencatat kejadian/insiden selama perjalanan
+FR-TR-084: Sistem mencatat penerapan K3 (safety briefing, alat safety)
+FR-TR-085: Sistem mencatat kondisi mesin sebelum/sesudah trip
+FR-TR-086: Log dapat di-sign off oleh Nakhoda
+FR-TR-087: Histori log dapat diaudit oleh manajemen
+FR-TR-088: Integrasi dengan Modul Risiko untuk insiden
+FR-TR-089: Log dapat di-export untuk pelaporan instansi
+```
+
+**Struktur Log Operasional:**
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║              LOG OPERASIONAL KAPAL HARIAN                    ║
+╠══════════════════════════════════════════════════════════════╣
+║ Kapal: KM Toba I          │ Tanggal: 19 Januari 2026         ║
+║ Nakhoda: Ahmad Suryadi    │ Rute: Parapat - Tuk-Tuk          ║
+╠══════════════════════════════════════════════════════════════╣
+║ CHECKLIST PRE-DEPARTURE (Sebelum Berangkat)                  ║
+║ ☑ Briefing keselamatan dilakukan                             ║
+║ ☑ Life jacket tersedia dan cukup                             ║
+║ ☑ Alat pemadam api berfungsi                                 ║
+║ ☑ Kondisi mesin: BAIK (Hour Meter: 2,345 jam)                ║
+║ ☑ Level BBM: 85%                                             ║
+║ ☑ GPS Tracker: AKTIF                                         ║
+║ ☑ Cuaca: CERAH, Angin: 5 knot                                ║
+╠══════════════════════════════════════════════════════════════╣
+║ TRIP LOG                                                     ║
+║ 08:00 - Berangkat Parapat    │ Penumpang: 45                 ║
+║ 08:35 - Tiba Tuk-Tuk         │ Penumpang turun: 30           ║
+║ 09:00 - Berangkat Tuk-Tuk    │ Penumpang naik: 25            ║
+║ 09:35 - Tiba Parapat         │ Penumpang turun: 40           ║
+║ ... (berlanjut)                                              ║
+╠══════════════════════════════════════════════════════════════╣
+║ KEJADIAN/INSIDEN                                             ║
+║ ⚠️ 10:15 - Penumpang mabuk laut, diberikan pertolongan       ║
+║ ✅ Tidak ada insiden serius                                  ║
+╠══════════════════════════════════════════════════════════════╣
+║ KONDISI AKHIR HARI                                           ║
+║ BBM tersisa: 45% │ Hour Meter: 2,352 jam │ Status: NORMAL    ║
+╠══════════════════════════════════════════════════════════════╣
+║ Sign-off Nakhoda: Ahmad Suryadi        │ TTD: ____________   ║
+║ Sign-off Operator: Budi Pratama        │ TTD: ____________   ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+**Kategori Log Entry:**
+
+| Kategori | Icon | Deskripsi |
+|----------|:----:|-----------|
+| Departure | 🚀 | Keberangkatan dari dermaga |
+| Arrival | 🏁 | Kedatangan di dermaga |
+| Weather | 🌤️ | Kondisi cuaca |
+| K3/Safety | 🛡️ | Aktivitas keselamatan |
+| Incident | ⚠️ | Kejadian/insiden |
+| Maintenance | 🔧 | Catatan perawatan |
+| Fuel | ⛽ | Pengisian BBM |
+| Passenger | 👥 | Jumlah penumpang |
+
+**Integrasi dengan Modul Risiko:**
+
+| Event di Log | Trigger ke Risiko |
+|--------------|-------------------|
+| Incident Kategori Serius | Auto-create risk entry |
+| Overcapacity detected | KRI alert + risk entry |
+| Maintenance overdue | KRI alert + risk entry |
+| Cuaca buruk (force majeure) | Log untuk audit trail |
+| K3 checklist tidak lengkap | Warning + risk entry |
+
 ---
 
 ## 5. Integrasi Real-time dengan Keuangan

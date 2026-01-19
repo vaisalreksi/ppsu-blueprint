@@ -88,39 +88,61 @@ const modul_dashboard = {
         mermaid: `flowchart TB
 subgraph DASHBOARD["📊 DASHBOARD TOP MANAGEMENT"]
     direction TB
-    D1[Executive<br>Summary] --> D2[Financial<br>KPIs]
-    D1 --> D3[Operational<br>KPIs]
-    D1 --> D4[Risk &<br>Compliance]
-    D1 --> D5[Alert<br>Center]
+    D1[Executive<br>Summary]
+    D1 --> D2[💰 Kinerja<br>Keuangan]
+    D1 --> D3[🏢 Kinerja<br>Unit Bisnis]
+    D1 --> D4[📈 Budget vs<br>Aktual]
+    D1 --> D5[⚠️ Risiko &<br>Temuan Audit]
+    D1 --> D6[🏦 Saldo<br>Bank/Giro]
+    D1 --> D7[✅ Approval<br>Center]
 end
 
-subgraph KEUANGAN["💰 KEUANGAN"]
+subgraph KEUANGAN["💰 DATA KEUANGAN"]
     K1[Revenue] --> D2
     K2[Profit] --> D2
-    K3[Cashflow] --> D2
-    K4[AR Aging] --> D2
+    K3[Cashflow] --> D6
+    K4[AR/AP] --> D2
 end
 
-subgraph OPERASIONAL["⚙️ OPERASIONAL"]
+subgraph BUDGET["📈 BUDGET & KPI"]
+    B1[RKA] --> D4
+    B2[Realisasi] --> D4
+    D4 --> B3{Early<br>Warning?}
+    B3 -->|> 80%| B4[🟡 Warning]
+    B3 -->|> 100%| B5[🔴 Over]
+end
+
+subgraph OPERASIONAL["🏢 UNIT BISNIS"]
     O1[🚢 Transport] --> D3
     O2[🏛️ PRSU] --> D3
     O3[🏗️ Teknik] --> D3
     O4[👥 HC] --> D3
 end
 
-subgraph GOVERNANCE["🛡️ GOVERNANCE"]
-    G1[⚠️ Risiko] --> D4
-    G2[🔍 CACM] --> D4
-    G1 --> D5
-    G2 --> D5
+subgraph GOVERNANCE["⚠️ RISIKO & CACM"]
+    G1[Risk Heat<br>Map] --> D5
+    G2[Temuan<br>Audit] --> D5
+    G3[KRI<br>Breach] --> ALERT
 end
 
-D5 --> ALERT[🔔 Real-time<br>Notification]
+subgraph APPROVAL["✅ OTORISASI"]
+    A1[Pending<br>Approval] --> D7
+    D7 --> A2{Action}
+    A2 -->|Approve| A3[✅ Done]
+    A2 -->|Reject| A4[❌ Reject]
+end
+
+B4 --> ALERT[🔔 ALERT<br>CENTER]
+B5 --> ALERT
+G2 --> ALERT
+ALERT --> NOTIF[📱 Push<br>Notification]
 
 style DASHBOARD fill:#1e40af,stroke:#3b82f6,color:#ffffff
 style KEUANGAN fill:#dcfce7,stroke:#22c55e,color:#166534
+style BUDGET fill:#fef3c7,stroke:#f59e0b,color:#78350f
 style OPERASIONAL fill:#f3e8ff,stroke:#a855f7,color:#581c87
-style GOVERNANCE fill:#fef3c7,stroke:#f59e0b,color:#78350f`
+style GOVERNANCE fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+style APPROVAL fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f`
     },
 
     // ============================================

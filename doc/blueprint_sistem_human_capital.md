@@ -72,7 +72,28 @@ FR-HC-003: Sistem dapat mencatat histori mutasi/promosi
 FR-HC-004: Sistem dapat mencatat status karyawan (aktif, cuti, resign, pensiun)
 FR-HC-005: Sistem dapat menyimpan dokumen karyawan (KTP, NPWP, kontrak)
 FR-HC-006: Sistem dapat generate nomor induk karyawan otomatis
+FR-HC-007: Sistem dapat mencatat kontrak kepegawaian (PKWT/PKWTT)
+FR-HC-008: Sistem dapat tracking masa berlaku kontrak dengan reminder
 ```
+
+**Data Induk Pegawai:**
+
+| Kategori | Data | Keterangan |
+|----------|------|------------|
+| Biodata | Nama, Tempat/Tgl Lahir, Alamat, KTP, NPWP | Data dasar |
+| Kepegawaian | NIK, Tgl Masuk, Jabatan, Unit, Grade | Status kerja |
+| Keluarga | Pasangan, Anak, Status PTKP | Untuk pajak |
+| Kontrak | Jenis (PKWT/PKWTT), Periode, Status | Masa kerja |
+| Dokumen | Ijazah, Sertifikat, SK Pengangkatan | Arsip digital |
+
+**Kontrak Kepegawaian:**
+
+| Jenis Kontrak | Keterangan | Masa Berlaku |
+|---------------|------------|-------------|
+| PKWTT | Pegawai Tetap | Tidak terbatas |
+| PKWT | Pegawai Kontrak | Maks 2 tahun + 1x perpanjangan |
+| Probation | Masa Percobaan | 3 bulan |
+| Outsource | Pihak ketiga | Sesuai kontrak vendor |
 
 ### 4.2 Presensi & Kehadiran
 
@@ -126,7 +147,98 @@ FR-HC-050: Sistem dapat setup indikator kinerja per jabatan
 FR-HC-051: Sistem dapat input nilai kinerja periodik
 FR-HC-052: Sistem dapat menghitung score kinerja
 FR-HC-053: Sistem menyediakan dashboard kinerja karyawan
+FR-HC-054: Sistem dapat set target individual dengan bobot
+FR-HC-055: Sistem dapat compare target vs realisasi
 ```
+
+**Contoh KPI:**
+
+| Perspektif | KPI | Target | Bobot |
+|------------|-----|--------|-------|
+| Financial | Penghematan biaya | 10% | 20% |
+| Customer | Kepuasan pelanggan | ≥ 4.0/5.0 | 25% |
+| Process | SLA compliance | ≥ 95% | 30% |
+| Learning | Training hours | ≥ 40 jam/tahun | 25% |
+
+### 4.7 Pengembangan SDM (Merit System)
+
+> [!IMPORTANT]
+> Merit system menghubungkan kinerja dengan reward dan pengembangan karir
+
+```
+FR-HC-060: Sistem dapat mencatat rencana pelatihan (TNA)
+FR-HC-061: Sistem dapat tracking pelaksanaan training dan evaluasi
+FR-HC-062: Sistem dapat mencatat sertifikasi dengan masa berlaku
+FR-HC-063: Sistem dapat reminder renewal sertifikasi
+FR-HC-064: Sistem dapat mencatat career path dan jalur promosi
+FR-HC-065: Sistem dapat link KPI dengan bonus/reward
+FR-HC-066: Sistem dapat generate laporan pengembangan SDM
+```
+
+**Komponen Merit System:**
+
+| Komponen | Deskripsi | Link ke |
+|----------|-----------|--------|
+| 🎓 **Training** | Jadwal, peserta, materi, evaluasi | KPI Learning |
+| 📜 **Sertifikasi** | Jenis, masa berlaku, renewal | Kompetensi |
+| 📈 **Career Path** | Jalur karir, promosi, rotasi | Histori Jabatan |
+| 🏆 **Reward** | Bonus, penghargaan | KPI Score |
+
+**Tracking Sertifikasi:**
+
+| Sertifikasi | Pemegang | Expired | Status |
+|-------------|----------|---------|--------|
+| PMP | Budi Santoso | 15 Mar 2027 | ✅ Active |
+| ISO 9001 Lead Auditor | Ani Wijaya | 20 Jan 2026 | ⚠️ Expiring Soon |
+| Ahli K3 Umum | Dedi Prasetyo | 10 Des 2025 | 🔴 Expired |
+
+**Training Log:**
+
+| Training | Peserta | Tanggal | Durasi | Evaluasi |
+|----------|---------|---------|--------|----------|
+| Leadership 101 | 15 orang | 10-12 Jan 2026 | 24 jam | 4.2/5.0 |
+| MS Excel Advanced | 20 orang | 15 Jan 2026 | 8 jam | 4.5/5.0 |
+
+### 4.8 Monitoring Disiplin & Sanksi
+
+> [!WARNING]
+> Pelanggaran disiplin harus didokumentasikan dan diproses sesuai prosedur
+
+```
+FR-HC-070: Sistem dapat mencatat pelanggaran disiplin
+FR-HC-071: Sistem dapat mengkategorikan tingkat pelanggaran (Ringan/Sedang/Berat)
+FR-HC-072: Sistem dapat mencatat sanksi (SP1/SP2/SP3/PHK)
+FR-HC-073: Sistem dapat tracking timeline pembinaan
+FR-HC-074: Sistem dapat upload bukti pelanggaran
+FR-HC-075: Sistem menyimpan histori disiplin per karyawan
+FR-HC-076: Sistem dapat link disiplin ke KPI dan kontrak
+```
+
+**Tingkat Pelanggaran:**
+
+| Tingkat | Contoh | Sanksi |
+|---------|--------|---------|
+| 🟡 Ringan | Terlambat < 3x/bulan | Teguran Lisan |
+| 🟠 Sedang | Absen tanpa izin 1-3 hari | SP1 |
+| 🔴 Berat | Absen tanpa izin > 5 hari | SP2/SP3 |
+| ⚫ Sangat Berat | Fraud, kekerasan | PHK |
+
+**Timeline Sanksi:**
+
+| Tahap | Sanksi | Masa Berlaku | Konsekuensi |
+|-------|--------|--------------|-------------|
+| 1 | Surat Peringatan 1 (SP1) | 6 bulan | Warning |
+| 2 | Surat Peringatan 2 (SP2) | 6 bulan | Tidak ada kenaikan gaji |
+| 3 | Surat Peringatan 3 (SP3) | 6 bulan | Potensi PHK |
+| 4 | PHK | - | Pemutusan hubungan kerja |
+
+**Contoh Record Disiplin:**
+
+| Tanggal | Karyawan | Pelanggaran | Sanksi | Status |
+|---------|----------|-------------|--------|--------|
+| 15 Jan 2026 | EMP-001 | Terlambat 5x | SP1 | Active |
+| 10 Jan 2026 | EMP-025 | Absen tanpa izin 2 hari | SP1 | Active |
+| 05 Jan 2026 | EMP-012 | Cekcok dengan rekan | Teguran | Closed |
 
 ---
 
@@ -402,7 +514,17 @@ Integrasi **Keuangan** menjamin:
 - Rekonsiliasi otomatis
 - Closing bulanan lebih cepat
 
+Fitur unggulan:
+- 💼 **Data Induk Pegawai** - Master karyawan lengkap dengan kontrak
+- 📋 **Presensi & Cuti** - Kehadiran, lembur, approval workflow
+- 💰 **Payroll & PPh 21** - Perhitungan otomatis sesuai regulasi
+- 🎯 **KPI Karyawan** - Target, realisasi, score
+- 🎓 **Merit System** - Training, sertifikasi, career path
+- ⚠️ **Disiplin & Sanksi** - Pelanggaran, SP, timeline
+- 🔗 **Integrasi Keuangan** - Jurnal gaji otomatis
+
 ---
 
 *Dokumen ini disusun sebagai bagian dari analisis sistem PT PPSU Perseroda*
-*Versi: 1.0 | Tanggal: 18 Januari 2026*
+*Versi: 2.0 | Tanggal: 19 Januari 2026*
+*Update: Penambahan Data Kontrak, Merit System, dan Disiplin/Sanksi*

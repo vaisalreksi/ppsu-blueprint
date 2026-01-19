@@ -78,6 +78,18 @@ const modul_kesekretariatan = {
                          <strong>Disposisi diproses:</strong> < 24 jam<br>
                          <strong>Kontrak expired tanpa warning:</strong> 0%<br>
                          <strong>User adoption:</strong> > 90%`
+            },
+            {
+                icon: '📅',
+                iconBg: 'rgba(236, 72, 153, 0.1)',
+                iconColor: '#ec4899',
+                title: 'Manajemen Rapat (NEW)',
+                content: `<strong>📅 Jadwal:</strong> Kalender rapat, booking ruangan<br>
+                         <strong>📨 Undangan:</strong> Generate undangan, konfirmasi hadir<br>
+                         <strong>📝 Notulen:</strong> Template, upload hasil rapat<br>
+                         <strong>☑️ Action Items:</strong> Assign tugas, deadline, tracking<br>
+                         <strong>📈 Follow-up:</strong> Reminder, status progress<br>
+                         <strong>🔗 Integrasi:</strong> Link ke disposisi & arsip`
             }
         ]
     },
@@ -90,58 +102,69 @@ const modul_kesekretariatan = {
         mermaid: `flowchart TB
 subgraph SM["📬 SURAT MASUK"]
     direction TB
-    SM1[Surat Masuk<br>Fisik/Email] --> SM2[Registrasi &<br>Scan Dokumen]
-    SM2 --> SM3[Generate Nomor<br>SM-UNIT-YYYY-NNNN]
+    SM1[Surat Masuk] --> SM2[Registrasi &<br>Scan]
+    SM2 --> SM3[Generate<br>Nomor]
     SM3 --> SM4{Perlu<br>Disposisi?}
     SM4 -->|Ya| SM5[Kirim ke<br>Direksi]
-    SM4 -->|Tidak| SM6[Arsip<br>Langsung]
+    SM4 -->|Tidak| SM6[Arsip]
 end
 
-subgraph DSP["✍️ DISPOSISI DIGITAL"]
+subgraph DSP["✍️ DISPOSISI"]
     direction TB
-    DSP1[Inbox Direksi] --> DSP2[Review &<br>Input Instruksi]
-    DSP2 --> DSP3[Pilih Penerima<br>+ Set Deadline]
-    DSP3 --> DSP4[Kirim Disposisi]
-    DSP4 --> DSP5[Notifikasi<br>Penerima]
-    DSP5 --> DSP6{Ditindaklanjuti?}
-    DSP6 -->|Ya| DSP7[Update Status<br>Selesai]
-    DSP6 -->|Tidak| DSP8[Reminder &<br>Eskalasi]
-    DSP8 --> DSP6
+    DSP1[Inbox] --> DSP2[Review &<br>Instruksi]
+    DSP2 --> DSP3[Set Penerima<br>& Deadline]
+    DSP3 --> DSP4[Kirim]
+    DSP4 --> DSP5{Done?}
+    DSP5 -->|Ya| DSP6[✅ Selesai]
+    DSP5 -->|Tidak| DSP7[⚠️ Reminder]
+    DSP7 --> DSP5
+end
+
+subgraph RAPAT["📅 MANAJEMEN RAPAT"]
+    direction TB
+    R1[📅 Jadwal<br>Rapat] --> R2[🏢 Booking<br>Ruangan]
+    R2 --> R3[📨 Generate<br>Undangan]
+    R3 --> R4[RSVP<br>Konfirmasi]
+    R4 --> R5[🎯 Rapat<br>Berlangsung]
+    R5 --> R6[📝 Input<br>Notulen]
+    R6 --> R7[☑️ Action<br>Items]
+    R7 --> R8{Status?}
+    R8 -->|Done| R9[✅ Verified]
+    R8 -->|Pending| R10[🔔 Reminder]
+    R10 --> R8
 end
 
 subgraph SK["📤 SURAT KELUAR"]
     direction TB
-    SK1[Draft Surat] --> SK2[Review<br>Atasan]
-    SK2 --> SK3{Approved?}
-    SK3 -->|Ya| SK4[Generate Nomor<br>NNNN/PPSU/UNIT/MM/YYYY]
+    SK1[Draft] --> SK2[Review]
+    SK2 --> SK3{OK?}
+    SK3 -->|Ya| SK4[Nomor]
     SK3 -->|Tidak| SK1
-    SK4 --> SK5[Cetak &<br>TTD]
-    SK5 --> SK6[Kirim &<br>Arsip]
+    SK4 --> SK5[Kirim]
 end
 
-subgraph KTR["📋 KONTRAK & LEGAL"]
+subgraph KTR["📋 KONTRAK"]
     direction TB
-    KTR1[Input Data<br>Kontrak] --> KTR2[Review<br>Legal]
-    KTR2 --> KTR3[TTD &<br>Arsip]
-    KTR3 --> KTR4[Monitoring<br>Masa Berlaku]
-    KTR4 --> KTR5{H-30<br>Expired?}
-    KTR5 -->|Ya| KTR6[🔔 Alert<br>Notifikasi]
-    KTR5 -->|Tidak| KTR4
-    KTR6 --> KTR7{Perpanjang?}
-    KTR7 -->|Ya| KTR1
-    KTR7 -->|Tidak| KTR8[Terminate]
+    KTR1[Input] --> KTR2[Review Legal]
+    KTR2 --> KTR3[TTD & Arsip]
+    KTR3 --> KTR4{H-30?}
+    KTR4 -->|Ya| KTR5[🔔 Alert]
+    KTR4 -->|Tidak| KTR4
 end
 
 SM5 --> DSP1
-DSP7 --> SK1
-SK6 --> ARSIP[(🗄️ ARSIP<br>DIGITAL)]
+DSP6 --> SK1
+SK5 --> ARSIP[(🗄️ ARSIP)]
 SM6 --> ARSIP
 KTR3 --> ARSIP
+R6 --> ARSIP
+R7 --> DSP1
 
 style SM fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
 style DSP fill:#dcfce7,stroke:#22c55e,color:#166534
+style RAPAT fill:#fce7f3,stroke:#ec4899,color:#831843
 style SK fill:#fef3c7,stroke:#f59e0b,color:#78350f
-style KTR fill:#fce7f3,stroke:#ec4899,color:#831843
+style KTR fill:#f3e8ff,stroke:#a855f7,color:#581c87
 style ARSIP fill:#e0e7ff,stroke:#6366f1,color:#3730a3`
     },
 
@@ -395,6 +418,315 @@ style ARSIP fill:#e0e7ff,stroke:#6366f1,color:#3730a3`
                                     <td>Revenue Share</td>
                                     <td>31/12/2026</td>
                                     <td><span class="mockup-status approved">🟢 Aktif</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Kalender Rapat -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                        <span class="mockup-title">📅 Kalender Rapat</span>
+                        <div class="mockup-actions">
+                            <button class="mockup-btn" style="background: white; color: #7c3aed;">+ Jadwalkan Rapat</button>
+                        </div>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- Calendar Header -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <button style="background: #f1f5f9; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">← Sebelumnya</button>
+                            <div style="font-weight: 600; font-size: 1.1rem;">📅 Januari 2026</div>
+                            <button style="background: #f1f5f9; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">Berikutnya →</button>
+                        </div>
+
+                        <!-- Mini Calendar Week View -->
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #64748b; font-size: 0.75rem;">SEN</div>
+                            <div style="font-weight: 600; color: #64748b; font-size: 0.75rem;">SEL</div>
+                            <div style="font-weight: 600; color: #64748b; font-size: 0.75rem;">RAB</div>
+                            <div style="font-weight: 600; color: #64748b; font-size: 0.75rem;">KAM</div>
+                            <div style="font-weight: 600; color: #64748b; font-size: 0.75rem;">JUM</div>
+                            <div style="font-weight: 600; color: #64748b; font-size: 0.75rem;">SAB</div>
+                            <div style="font-weight: 600; color: #64748b; font-size: 0.75rem;">MIN</div>
+                            
+                            <div style="padding: 0.5rem; border-radius: 6px;">19</div>
+                            <div style="padding: 0.5rem; border-radius: 6px; background: #8b5cf6; color: white; font-weight: 600;">20</div>
+                            <div style="padding: 0.5rem; border-radius: 6px;">21</div>
+                            <div style="padding: 0.5rem; border-radius: 6px; background: #fef3c7;">22</div>
+                            <div style="padding: 0.5rem; border-radius: 6px;">23</div>
+                            <div style="padding: 0.5rem; border-radius: 6px; background: #dcfce7;">24</div>
+                            <div style="padding: 0.5rem; border-radius: 6px;">25</div>
+                        </div>
+
+                        <!-- Today's Meetings -->
+                        <div style="font-weight: 600; margin-bottom: 0.75rem;">📌 Rapat Hari Ini (19 Jan 2026)</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 0.75rem 1rem; border-radius: 0 8px 8px 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600;">🗣️ Rapat Koordinasi Direksi</div>
+                                        <div style="font-size: 0.8rem; color: #64748b;">🕒 09:00 - 11:00 | 📍 Ruang Rapat Utama | 👥 8 peserta</div>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <span style="background: #22c55e; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">Berlangsung</span>
+                                        <button style="background: #3b82f6; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; cursor: pointer;">Detail</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 0.75rem 1rem; border-radius: 0 8px 8px 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600;">💼 Review Proyek Infrastruktur</div>
+                                        <div style="font-size: 0.8rem; color: #64748b;">🕒 14:00 - 16:00 | 📍 Ruang Meeting B | 👥 12 peserta</div>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <span style="background: #f59e0b; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">Upcoming</span>
+                                        <button style="background: #3b82f6; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; cursor: pointer;">Detail</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upcoming This Week -->
+                        <div style="font-weight: 600; margin: 1rem 0 0.75rem;">📆 Jadwal Minggu Ini</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; font-size: 0.85rem;">
+                            <div style="background: #f8fafc; padding: 0.75rem; border-radius: 8px;">
+                                <div style="font-weight: 600;">20 Jan - Sel</div>
+                                <div style="color: #64748b;">09:00 - Rapat Keuangan Bulanan</div>
+                            </div>
+                            <div style="background: #f8fafc; padding: 0.75rem; border-radius: 8px;">
+                                <div style="font-weight: 600;">22 Jan - Kam</div>
+                                <div style="color: #64748b;">10:00 - Review Kontrak Vendor</div>
+                            </div>
+                            <div style="background: #f8fafc; padding: 0.75rem; border-radius: 8px;">
+                                <div style="font-weight: 600;">24 Jan - Sab</div>
+                                <div style="color: #64748b;">14:00 - Town Hall Meeting</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Jadwal Rapat -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);">
+                        <span class="mockup-title">✍️ Jadwalkan Rapat Baru</span>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="mockup-grid">
+                            <div class="mockup-form-group">
+                                <label class="mockup-label">Judul Rapat *</label>
+                                <input type="text" class="mockup-input" placeholder="Nama/judul rapat">
+                            </div>
+                            <div class="mockup-form-group">
+                                <label class="mockup-label">Jenis Rapat *</label>
+                                <select class="mockup-select">
+                                    <option>🗣️ Rapat Koordinasi</option>
+                                    <option>💼 Rapat Proyek</option>
+                                    <option>📊 Rapat Review</option>
+                                    <option>🎓 Training/Workshop</option>
+                                    <option>🎯 Town Hall</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mockup-grid">
+                            <div class="mockup-form-group">
+                                <label class="mockup-label">Tanggal *</label>
+                                <input type="date" class="mockup-input" value="2026-01-22">
+                            </div>
+                            <div class="mockup-form-group">
+                                <label class="mockup-label">Waktu *</label>
+                                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                    <input type="time" class="mockup-input" value="09:00" style="flex: 1;">
+                                    <span>-</span>
+                                    <input type="time" class="mockup-input" value="11:00" style="flex: 1;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mockup-grid">
+                            <div class="mockup-form-group">
+                                <label class="mockup-label">Ruangan *</label>
+                                <select class="mockup-select">
+                                    <option>🏢 Ruang Rapat Utama (30 org)</option>
+                                    <option>🏢 Ruang Meeting A (15 org)</option>
+                                    <option>🏢 Ruang Meeting B (10 org)</option>
+                                    <option>💻 Virtual (Zoom/Teams)</option>
+                                </select>
+                            </div>
+                            <div class="mockup-form-group">
+                                <label class="mockup-label">Pimpinan Rapat</label>
+                                <select class="mockup-select">
+                                    <option>Direktur Utama</option>
+                                    <option>Direktur Operasional</option>
+                                    <option>Direktur Keuangan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mockup-form-group">
+                            <label class="mockup-label">Peserta Rapat *</label>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 8px; min-height: 60px;">
+                                <span style="background: #dbeafe; color: #1d4ed8; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; display: flex; align-items: center; gap: 0.25rem;">👤 Manajer Keuangan <button style="background: none; border: none; cursor: pointer;">×</button></span>
+                                <span style="background: #dbeafe; color: #1d4ed8; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; display: flex; align-items: center; gap: 0.25rem;">👤 Manajer Operasional <button style="background: none; border: none; cursor: pointer;">×</button></span>
+                                <span style="background: #dbeafe; color: #1d4ed8; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; display: flex; align-items: center; gap: 0.25rem;">👤 Manajer HC <button style="background: none; border: none; cursor: pointer;">×</button></span>
+                                <span style="background: #f1f5f9; color: #64748b; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">+ Tambah</span>
+                            </div>
+                        </div>
+
+                        <div class="mockup-form-group">
+                            <label class="mockup-label">Agenda Rapat</label>
+                            <textarea class="mockup-textarea" placeholder="1. Pembukaan&#10;2. Pembahasan...&#10;3. Penutup" style="min-height: 80px;"></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;"><input type="checkbox" checked> Kirim undangan via email</label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;"><input type="checkbox"> Reminder H-1</label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;"><input type="checkbox"> Reminder H-0 (1 jam sebelum)</label>
+                        </div>
+
+                        <button class="mockup-submit" style="background: #ec4899; margin-top: 1rem;">📅 Buat Jadwal & Kirim Undangan</button>
+                    </div>
+                </div>
+
+                <!-- Notulen Rapat -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);">
+                        <span class="mockup-title">📝 Notulen Rapat</span>
+                        <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">Rapat Koordinasi Direksi - 19 Jan 2026</span>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- Meeting Info -->
+                        <div style="background: #f0f9ff; border: 1px solid #0ea5e9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.85rem;">
+                                <div><strong>Tanggal:</strong> 19 Januari 2026</div>
+                                <div><strong>Waktu:</strong> 09:00 - 11:00 WIB</div>
+                                <div><strong>Tempat:</strong> Ruang Rapat Utama</div>
+                                <div><strong>Pimpinan:</strong> Direktur Utama</div>
+                            </div>
+                        </div>
+
+                        <!-- Attendance -->
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem;">👥 Kehadiran Peserta</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">✅ Direktur Utama</span>
+                                <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">✅ Direktur Operasional</span>
+                                <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">✅ Manajer Keuangan</span>
+                                <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">✅ Manajer Operasional</span>
+                                <span style="background: #fef2f2; color: #991b1b; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">❌ Manajer HC (Izin)</span>
+                            </div>
+                        </div>
+
+                        <!-- Notulen Content -->
+                        <div class="mockup-form-group">
+                            <label class="mockup-label">Hasil Pembahasan</label>
+                            <textarea class="mockup-textarea" style="min-height: 120px;">1. Pembukaan oleh Direktur Utama
+2. Laporan progress proyek infrastruktur - SPI saat ini 0.92
+3. Pembahasan kendala pengadaan material
+4. Review performa transportasi Q4 2025
+5. Rencana ekspansi rute baru
+6. Penutup dan doa</textarea>
+                        </div>
+
+                        <!-- Action Items -->
+                        <div style="margin-top: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                <div style="font-weight: 600;">☑️ Action Items</div>
+                                <button style="background: #22c55e; color: white; border: none; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">+ Tambah</button>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <div style="background: #f8fafc; padding: 0.75rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 500;">Follow-up vendor material ke-3</div>
+                                        <div style="font-size: 0.75rem; color: #64748b;">👤 Manajer Operasional | 📅 Deadline: 22 Jan 2026</div>
+                                    </div>
+                                    <span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">🟡 In Progress</span>
+                                </div>
+                                <div style="background: #f8fafc; padding: 0.75rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 500;">Siapkan proposal rute baru</div>
+                                        <div style="font-size: 0.75rem; color: #64748b;">👤 Manajer Transportasi | 📅 Deadline: 31 Jan 2026</div>
+                                    </div>
+                                    <span style="background: #dbeafe; color: #1d4ed8; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">🟢 Open</span>
+                                </div>
+                                <div style="background: #dcfce7; padding: 0.75rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 500;">Update laporan keuangan Q4</div>
+                                        <div style="font-size: 0.75rem; color: #64748b;">👤 Manajer Keuangan | 📅 Deadline: 20 Jan 2026</div>
+                                    </div>
+                                    <span style="background: #22c55e; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">✅ Done</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button class="mockup-submit" style="flex: 1;">💾 Simpan Notulen</button>
+                            <button class="mockup-submit" style="flex: 1; background: #8b5cf6;">📤 Kirim ke Peserta</button>
+                            <button class="mockup-submit" style="flex: 1; background: #64748b;">📄 Export PDF</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Items Tracker -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
+                        <span class="mockup-title">📊 Tracking Action Items</span>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- Summary Cards -->
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="background: #dbeafe; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #1d4ed8;">8</div>
+                                <div style="font-size: 0.7rem; color: #1d4ed8;">Open</div>
+                            </div>
+                            <div style="background: #fef3c7; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #92400e;">5</div>
+                                <div style="font-size: 0.7rem; color: #92400e;">In Progress</div>
+                            </div>
+                            <div style="background: #dcfce7; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #166534;">23</div>
+                                <div style="font-size: 0.7rem; color: #166534;">Done</div>
+                            </div>
+                            <div style="background: #fef2f2; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #991b1b;">2</div>
+                                <div style="font-size: 0.7rem; color: #991b1b;">Overdue</div>
+                            </div>
+                        </div>
+
+                        <!-- Action Items Table -->
+                        <table class="mockup-table" style="font-size: 0.85rem;">
+                            <thead>
+                                <tr>
+                                    <th>Action Item</th>
+                                    <th>Dari Rapat</th>
+                                    <th>PIC</th>
+                                    <th>Deadline</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: #fef2f2;">
+                                    <td>Kirim laporan progress ke Pemprov</td>
+                                    <td>Rakor 15 Jan</td>
+                                    <td>Sekretaris</td>
+                                    <td style="color: #ef4444; font-weight: 600;">17 Jan 🔴</td>
+                                    <td><span style="background: #ef4444; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">Overdue</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Follow-up vendor material ke-3</td>
+                                    <td>Rakor 19 Jan</td>
+                                    <td>Mgr Operasional</td>
+                                    <td>22 Jan</td>
+                                    <td><span style="background: #f59e0b; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">In Progress</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Siapkan proposal rute baru</td>
+                                    <td>Rakor 19 Jan</td>
+                                    <td>Mgr Transport</td>
+                                    <td>31 Jan</td>
+                                    <td><span style="background: #3b82f6; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">Open</span></td>
                                 </tr>
                             </tbody>
                         </table>

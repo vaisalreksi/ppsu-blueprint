@@ -66,14 +66,37 @@ Continuous Audit & Continuous Monitoring (CACM) adalah pendekatan audit modern y
 
 ## 4. Kebutuhan Fungsional
 
-### 4.1 Audit Universe & Planning
+### 4.1 Audit Universe & RKPT (Rencana Kerja Pengawasan Tahunan)
+
+> [!IMPORTANT]
+> Audit plan disusun berbasis risiko (Risk-Based Internal Audit / RBIA)
 
 ```
 FR-CA-001: Sistem dapat mencatat audit universe (area auditabel)
 FR-CA-002: Sistem dapat link audit area ke modul operasional
 FR-CA-003: Sistem dapat setup risk scoring per audit area
-FR-CA-004: Sistem dapat generate risk-based audit plan
-FR-CA-005: Sistem dapat tracking audit schedule
+FR-CA-004: Sistem dapat generate risk-based audit plan (RKPT)
+FR-CA-005: Sistem dapat tracking audit schedule vs realisasi
+FR-CA-006: Sistem dapat mencatat tim auditor per penugasan
+FR-CA-007: Sistem menampilkan timeline RKPT per quarter
+```
+
+**Contoh Audit Universe:**
+
+| Unit/Proses | Risk Rating | Last Audit | Next Audit | Status RKPT |
+|-------------|-------------|------------|------------|-------------|
+| Divisi Keuangan - Pembayaran | 🔴 High | Jun 2025 | Jan 2026 | 🔄 Ongoing |
+| Divisi Teknik - Proyek Aktif | 🔴 High | Mar 2025 | Mar 2026 | 📅 Scheduled |
+| Divisi HC - Payroll | 🟡 Medium | Des 2025 | Jun 2026 | 📅 Scheduled |
+| Divisi Transportasi | 🟡 Medium | Jan 2026 | Jul 2026 | ✅ Done |
+
+**Timeline RKPT 2026:**
+```
+  Q1          Q2          Q3          Q4
+┌─────────┬─────────┬─────────┬─────────┐
+│Keuangan │   HC    │ Teknik  │  PRSU   │
+│(Jan-Mar)│(Apr-Jun)│(Jul-Sep)│(Okt-Des)│
+└─────────┴─────────┴─────────┴─────────┘
 ```
 
 ### 4.2 Automated Audit Rules
@@ -102,6 +125,64 @@ FR-CA-015: Sistem dapat set severity per rule (low/medium/high/critical)
 | R-PRJ-001 | Progress Lag | Actual < Plan > 15% | High | Teknik |
 | R-PRJ-002 | Cost Overrun | Actual cost > Budget 10% | Critical | Teknik |
 | R-OPS-001 | Overcapacity | Kapasitas ferry > 100% | Critical | Transportasi |
+
+### 4.3 Red Flag Otomatis
+
+> [!WARNING]
+> Red Flag adalah indikator awal potensi fraud atau penyimpangan yang terdeteksi otomatis
+
+```
+FR-CA-016: Sistem dapat mendeteksi red flag berdasarkan pattern
+FR-CA-017: Sistem mengkategorikan red flag per area (Keuangan/HC/Proyek)
+FR-CA-018: Sistem mengirim alert otomatis untuk red flag
+FR-CA-019: Sistem dapat drill-down ke transaksi sumber
+FR-CA-020: Sistem menyediakan button "Investigate" per red flag
+```
+
+**Contoh Red Flag per Kategori:**
+
+| Kategori | Jumlah | Jenis Red Flag |
+|----------|--------|----------------|
+| 💰 Keuangan | 5 | Duplicate payment, Split PO, Unusual transaction |
+| 👥 HC | 2 | Ghost employee, Overtime anomaly |
+| 🏗️ Proyek | 3 | Cost overrun, Delay, Excessive change order |
+
+**Contoh Red Flag Terbaru:**
+- 🚩 **Split Purchase Order** - 3 PO ke vendor sama, tanggal berurutan (hindari limit Rp 50jt)
+- 🚩 **Unusual Overtime Pattern** - 1 karyawan 50 jam/minggu (NIK: EMP-2024-0078)
+
+### 4.4 Sampling Transaksi
+
+> [!NOTE]
+> Sampling digunakan untuk memilih sampel transaksi yang akan di-testing secara detail
+
+```
+FR-CA-021: Sistem dapat generate sample list dari populasi transaksi
+FR-CA-022: Sistem mendukung metode sampling (Random, Targeted, Statistical)
+FR-CA-023: Sistem dapat set confidence level (90%/95%/99%)
+FR-CA-024: Sistem otomatis menghitung sample size
+FR-CA-025: Sistem dapat tracking status testing per sample
+FR-CA-026: Sistem dapat dokumentasi hasil testing di workpaper
+```
+
+**Konfigurasi Sampling:**
+
+| Parameter | Nilai Contoh |
+|-----------|-------------|
+| Populasi | Pembayaran Jan 2026 |
+| Total Transaksi | 1,245 transaksi |
+| Total Nilai | Rp 12.5 M |
+| Metode | Random + High Value |
+| Confidence Level | 95% |
+| Sample Size | 85 transaksi |
+
+**Contoh Sample List:**
+
+| No | Voucher | Vendor | Nilai | Kategori | Status Testing |
+|----|---------|--------|-------|----------|----------------|
+| 1 | VCR-2026-0145 | PT Jaya Konstruksi | Rp 245.000.000 | High Value | ✅ Tested OK |
+| 2 | VCR-2026-0123 | CV Maju Bersama | Rp 78.500.000 | Random | ❌ Exception |
+| 3 | VCR-2026-0098 | PT Supplier ABC | Rp 25.000.000 | Random | 🔄 Testing |
 
 ### 4.3 Exception Detection & Alert
 
@@ -142,6 +223,46 @@ FR-CA-036: Sistem dapat escalate overdue findings
 - 🟢 **Closed** - Verified and closed
 - ⚫ **Overdue** - Past deadline, not resolved
 
+### 4.6 Monitoring Tindak Lanjut Temuan
+
+> [!IMPORTANT]
+> Tindak lanjut (TL) adalah proses perbaikan yang dilakukan auditee atas temuan audit
+
+```
+FR-CA-040: Dashboard menampilkan summary status TL (Belum TL/Proses/Verify/Selesai/Overdue)
+FR-CA-041: Sistem menampilkan progress TL per unit kerja
+FR-CA-042: Sistem menampilkan aging temuan belum TL
+FR-CA-043: Sistem dapat escalate temuan overdue
+FR-CA-044: Sistem mengirim reminder ke PIC mendekati deadline
+FR-CA-045: Sistem menyediakan report rekapitulasi TL
+```
+
+**Summary Status Tindak Lanjut:**
+
+| Status | Jumlah | Keterangan |
+|--------|--------|------------|
+| 🔴 Belum TL | 5 | Temuan baru, belum ada action |
+| 🟡 Proses TL | 8 | Perbaikan sedang berjalan |
+| 🔵 Pending Verify | 3 | Menunggu verifikasi auditor |
+| 🟢 Selesai | 28 | Sudah verified & closed |
+| ⚫ Overdue | 2 | Lewat deadline |
+
+**Progress TL per Unit:**
+
+| Unit | Selesai/Total | Progress |
+|------|---------------|----------|
+| Divisi Keuangan | 8/10 | 80% ✅ |
+| Divisi Teknik | 3/8 | 37% ⚠️ |
+
+**Aging Temuan Belum TL:**
+
+| Rentang Hari | Jumlah |
+|--------------|--------|
+| < 30 hari | 2 |
+| 30-60 hari | 1 |
+| 60-90 hari | 1 |
+| > 90 hari | 1 ⚠️ |
+
 ### 4.5 Analytics & Dashboard
 
 ```
@@ -162,6 +283,42 @@ FR-CA-052: Sistem dapat generate audit coverage report
 FR-CA-053: Sistem dapat generate management summary report
 FR-CA-054: Sistem dapat export report (PDF, Excel)
 ```
+
+### 4.9 Arsip Digital Audit
+
+> [!NOTE]
+> Arsip digital menyimpan seluruh dokumen pendukung audit dalam satu repository terpusat
+
+```
+FR-CA-060: Sistem dapat upload dokumen audit (LHA, Kertas Kerja, Evidence)
+FR-CA-061: Sistem mengkategorikan dokumen per jenis dan periode audit
+FR-CA-062: Sistem menyediakan fitur search dan filter dokumen
+FR-CA-063: Sistem dapat preview dokumen tanpa download
+FR-CA-064: Sistem dapat export dokumen (single/batch)
+FR-CA-065: Sistem mencatat histori akses dokumen (audit trail)
+```
+
+**Jenis Dokumen Arsip:**
+
+| Jenis | Deskripsi | Contoh |
+|-------|-----------|--------|
+| 📄 LHA | Laporan Hasil Audit | LHA_Keuangan_Q1_2026.pdf |
+| 📝 Kertas Kerja | Working paper audit | KKA_Testing_Pembayaran.xlsx |
+| 📷 Evidence | Bukti pendukung (foto, screenshot) | Evidence_VCR-0123.png |
+
+**Contoh Daftar Arsip:**
+
+| Audit ID | Nama Dokumen | Jenis | Tanggal | Uploader |
+|----------|--------------|-------|---------|----------|
+| AUD-2026-001 | 📄 LHA_Keuangan_Q1_2026.pdf | LHA | 18 Jan 2026 | Auditor Senior |
+| AUD-2026-001 | 📝 KKA_Testing_Pembayaran.xlsx | Kertas Kerja | 15 Jan 2026 | Auditor Junior |
+| AUD-2026-001 | 📷 Evidence_VCR-0123.png | Evidence | 14 Jan 2026 | Auditor Junior |
+
+**Summary Arsip:**
+- Total Dokumen: 156
+- 📄 LHA: 12
+- 📝 Kertas Kerja: 89  
+- 📷 Evidence: 55
 
 ---
 
@@ -365,13 +522,17 @@ Sistem CACM akan:
 > - **Memvisualisasikan** trend dan analytics
 
 Fitur unggulan:
+- 📅 **RKPT** - Risk-based annual audit plan
+- 🚩 **Red Flag** - Automated fraud indicator detection
+- 🎲 **Sampling** - Statistical transaction sampling
+- 📊 **Tindak Lanjut** - Finding remediation tracking
+- 📁 **Arsip Digital** - Centralized audit document repository
 - ⚙️ **Rule Engine** - Automated audit rules
 - 🔔 **Exception Alert** - Real-time notification
-- 📊 **Analytics** - Trend dan pattern detection
-- 📋 **Finding Workflow** - Digital remediation tracking
 - 🔗 **Full Integration** - Data dari semua modul
 
 ---
 
 *Dokumen ini disusun sebagai bagian dari analisis sistem PT PPSU Perseroda*
-*Versi: 1.0 | Tanggal: 18 Januari 2026*
+*Versi: 2.0 | Tanggal: 19 Januari 2026*
+*Update: Penambahan RKPT, Red Flag, Sampling, Tindak Lanjut, dan Arsip Digital*

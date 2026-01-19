@@ -77,6 +77,17 @@ const modul_transportasi = {
                          <strong>Dermaga:</strong> Layar digital info jadwal<br>
                          <strong>Mobile:</strong> Responsive untuk smartphone<br>
                          <strong>Info:</strong> ETA, kapasitas, keberangkatan`
+            },
+            {
+                icon: '⛽',
+                iconBg: 'rgba(239, 68, 68, 0.1)',
+                iconColor: '#ef4444',
+                title: 'BBM, Maintenance & Log Operasional',
+                content: `<strong>⛽ BBM:</strong> Tracking pengisian, konsumsi, KPI L/jam<br>
+                         <strong>🔧 Maintenance:</strong> Jadwal, checklist, status armada<br>
+                         <strong>📓 Log Operasional:</strong> Catatan kronologis sistematis<br>
+                         <strong>🛡️ K3:</strong> Safety briefing, checklist peralatan<br>
+                         <strong>⚠️ Integrasi Risiko:</strong> Auto-create jika ada insiden`
             }
         ]
     },
@@ -87,54 +98,72 @@ const modul_transportasi = {
     diagram: {
         title: 'Diagram Alur - Sistem Operasional Transportasi',
         mermaid: `flowchart TB
-subgraph TICKET["🎫 ALUR PEMBELIAN TIKET"]
+subgraph TICKET["🎫 TICKETING & KAPASITAS"]
     direction TB
     T1[Pilih<br>Jadwal] --> T2[Pilih<br>Jenis Tiket]
     T2 --> T3{Cek<br>Kapasitas}
     T3 -->|Tersedia| T4[Pembayaran]
     T3 -->|Penuh| T3A[❌ SOLD OUT]
-    T4 --> T5[Generate<br>E-Ticket + QR]
-    T5 --> T6[Scan QR<br>Validasi]
-    T6 --> T7[Boarding<br>Kapal]
+    T4 --> T5[E-Ticket<br>+ QR]
+    T5 --> T6[Boarding]
+    T6 --> T7{Level?}
+    T7 -->|< 80%| T8[🟢 OK]
+    T7 -->|80-90%| T9[🟡 Warning]
+    T7 -->|> 90%| T10[🔴 Alert]
 end
 
-subgraph GPS["📍 GPS TRACKING"]
+subgraph GPS["📍 GPS & CCTV"]
     direction TB
-    G1[GPS Device<br>di Kapal] --> G2[Send Data<br>tiap 10 detik]
-    G2 --> G3[Server<br>Process]
-    G3 --> G4[Calculate<br>ETA]
-    G4 --> G5[Update<br>Database]
-    G5 --> G6[Push ke<br>Dashboard]
-    G5 --> G7[Push ke<br>Public Map]
+    G1[GPS Device] --> G2[Posisi<br>Real-time]
+    G2 --> G3[ETA<br>Calculate]
+    G3 --> G4[Public Map]
+    G5[CCTV Kapal] --> G6[Monitoring<br>Dashboard]
 end
 
-subgraph CAPACITY["⚠️ MONITORING KAPASITAS"]
+subgraph BBM["⛽ MANAJEMEN BBM"]
     direction TB
-    C1[Tiket<br>Terjual] --> C2[Update<br>Counter]
-    C2 --> C3{Check<br>Level}
-    C3 -->|< 80%| C4[🟢 Normal]
-    C3 -->|80-90%| C5[🟡 Warning<br>Notif Operator]
-    C3 -->|90-100%| C6[🟠 Alert<br>Notif Manager]
-    C3 -->|= 100%| C7[🔴 BLOCK<br>SALE]
+    B1[Pengisian<br>BBM] --> B2[Catat Vol,<br>Harga, Struk]
+    B2 --> B3[Konsumsi<br>per Trip]
+    B3 --> B4{Rasio<br>L/jam?}
+    B4 -->|< 25| B5[✅ OK]
+    B4 -->|> 25| B6[⚠️ Alert]
+    B2 --> B7[Jurnal ke<br>Keuangan]
 end
 
-subgraph PAY["💳 PEMBAYARAN & KEUANGAN"]
+subgraph MAINT["🔧 MAINTENANCE KAPAL"]
     direction TB
-    P1[Cash<br>Loket] --> P3[Jurnal<br>Keuangan]
-    P2[QRIS /<br>E-Wallet] --> P3
-    P3 --> P4[Kas/Bank →<br>Pendapatan]
-    P4 --> KEU[(💰 MODUL<br>KEUANGAN)]
+    M1[📅 Schedule<br>Preventive] --> M2[Checklist<br>Daily/Weekly]
+    M2 --> M3{Status?}
+    M3 -->|OK| M4[🟢 Aktif]
+    M3 -->|Overdue| M5[🔴 Block +<br>Alert Risiko]
+    M3 -->|In Progress| M6[🟠 Non-aktif]
+    M1 --> M7[Jurnal Biaya<br>ke Keuangan]
 end
 
-T4 --> P1
-T4 --> P2
-T7 --> C1
+subgraph LOG["📓 LOG OPERASIONAL"]
+    direction TB
+    L1[Pre-Departure<br>Checklist] --> L2[🛡️ K3<br>Briefing]
+    L2 --> L3[Trip Log<br>Kronologis]
+    L3 --> L4{Insiden?}
+    L4 -->|Ya| L5[⚠️ Catat +<br>Link Risiko]
+    L4 -->|Tidak| L6[✅ Normal]
+    L3 --> L7[Sign-off<br>Nakhoda]
+end
+
+T4 --> KEU[(💰 MODUL<br>KEUANGAN)]
+B7 --> KEU
+M7 --> KEU
+L5 --> RSK[(⚠️ MODUL<br>RISIKO)]
+M5 --> RSK
+B6 --> RSK
 
 style TICKET fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
 style GPS fill:#dcfce7,stroke:#22c55e,color:#166534
-style CAPACITY fill:#fef3c7,stroke:#f59e0b,color:#78350f
-style PAY fill:#f3e8ff,stroke:#a855f7,color:#581c87
-style KEU fill:#fce7f3,stroke:#ec4899,color:#831843`
+style BBM fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+style MAINT fill:#fef3c7,stroke:#f59e0b,color:#78350f
+style LOG fill:#f3e8ff,stroke:#a855f7,color:#581c87
+style KEU fill:#fce7f3,stroke:#ec4899,color:#831843
+style RSK fill:#ffedd5,stroke:#f97316,color:#7c2d12`
     },
 
     // ============================================
@@ -405,6 +434,210 @@ style KEU fill:#fce7f3,stroke:#ec4899,color:#831843`
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- BBM Management -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                        <span class="mockup-title">⛽ Manajemen BBM</span>
+                        <div class="mockup-actions">
+                            <button class="mockup-btn" style="background: white; color: #dc2626;">+ Isi BBM</button>
+                        </div>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- BBM KPI Cards -->
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 0.7rem; color: #991b1b;">Konsumsi Hari Ini</div>
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #ef4444;">485 L</div>
+                                <div style="font-size: 0.65rem; color: #64748b;">4 trip</div>
+                            </div>
+                            <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 0.7rem; color: #92400e;">Rasio L/Jam</div>
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #f59e0b;">26.5</div>
+                                <div style="font-size: 0.65rem; color: #64748b;">🟡 > target 25</div>
+                            </div>
+                            <div style="background: #dcfce7; border: 2px solid #22c55e; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 0.7rem; color: #166534;">Budget Bulan Ini</div>
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #22c55e;">78%</div>
+                                <div style="font-size: 0.65rem; color: #64748b;">Rp 156 jt / 200 jt</div>
+                            </div>
+                            <div style="background: #dbeafe; border: 2px solid #3b82f6; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 0.7rem; color: #1e40af;">Stok BBM</div>
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #3b82f6;">2,450 L</div>
+                                <div style="font-size: 0.65rem; color: #64748b;">~5 hari</div>
+                            </div>
+                        </div>
+
+                        <!-- Recent BBM History -->
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">📝 Riwayat Pengisian Terakhir</div>
+                        <table class="mockup-table" style="font-size: 0.8rem;">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Kapal</th>
+                                    <th>Volume</th>
+                                    <th>Harga/L</th>
+                                    <th>Total</th>
+                                    <th>Hour Meter</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>19 Jan 08:00</td>
+                                    <td>KM Toba I</td>
+                                    <td>300 L</td>
+                                    <td>Rp 15.500</td>
+                                    <td style="font-weight: 600;">Rp 4.650.000</td>
+                                    <td>2,345 jam</td>
+                                </tr>
+                                <tr>
+                                    <td>18 Jan 16:30</td>
+                                    <td>KM Toba II</td>
+                                    <td>250 L</td>
+                                    <td>Rp 15.500</td>
+                                    <td style="font-weight: 600;">Rp 3.875.000</td>
+                                    <td>1,890 jam</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Maintenance Schedule -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                        <span class="mockup-title">🔧 Maintenance Kapal</span>
+                        <div class="mockup-actions">
+                            <button class="mockup-btn" style="background: white; color: #7c3aed;">+ Request</button>
+                        </div>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- Maintenance Status per Kapal -->
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                            <div style="background: #f8fafc; border-radius: 8px; padding: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                    <span style="font-weight: 600;">🚢 KM Toba I</span>
+                                    <span style="background: #22c55e; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">🟢 Aktif</span>
+                                </div>
+                                <div style="font-size: 0.8rem;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span>Daily Check</span>
+                                        <span style="color: #22c55e;">✅ Hari ini</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span>Weekly Service</span>
+                                        <span style="color: #22c55e;">✅ 20 Jan</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Monthly Major</span>
+                                        <span style="color: #f59e0b;">🟡 25 Jan</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="background: #fef2f2; border-radius: 8px; padding: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                    <span style="font-weight: 600;">🚢 KM Toba II</span>
+                                    <span style="background: #f59e0b; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">🟠 Maintenance</span>
+                                </div>
+                                <div style="font-size: 0.8rem;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span>Daily Check</span>
+                                        <span style="color: #ef4444;">🔴 OVERDUE</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span>Ganti Oli Mesin</span>
+                                        <span style="color: #f59e0b;">🟠 In Progress</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Target Selesai</span>
+                                        <span>19 Jan 14:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Daily Checklist -->
+                        <div style="background: #eff6ff; border: 1px solid #3b82f6; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem;">☑️ Daily Checklist - KM Toba I (19 Jan 2026)</div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.8rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;"><input type="checkbox" checked> Cek level oli mesin</label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;"><input type="checkbox" checked> Cek BBM cukup</label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;"><input type="checkbox" checked> Cek alat keselamatan</label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;"><input type="checkbox" checked> Cek life jacket</label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;"><input type="checkbox" checked> Cek CCTV berfungsi</label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;"><input type="checkbox" checked> Cek GPS tracker</label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;"><input type="checkbox"> Kebersihan kapal</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Operational Log -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);">
+                        <span class="mockup-title">📓 Log Operasional Harian</span>
+                        <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">KM Toba I - 19 Jan 2026</span>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- K3 Pre-Departure Checklist -->
+                        <div style="background: #dcfce7; border: 2px solid #22c55e; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>🛡️</span> K3 Pre-Departure Checklist
+                                <span style="background: #22c55e; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.7rem; margin-left: auto;">✅ COMPLETED</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.8rem;">
+                                <div>☑ Briefing keselamatan dilakukan</div>
+                                <div>☑ Life jacket tersedia (90 pcs)</div>
+                                <div>☑ Alat pemadam api OK</div>
+                                <div>☑ P3K lengkap</div>
+                                <div>☑ GPS Tracker AKTIF</div>
+                                <div>☑ Cuaca: CERAH, Angin 5 knot</div>
+                            </div>
+                        </div>
+
+                        <!-- Trip Log Timeline -->
+                        <div style="font-weight: 600; margin-bottom: 0.75rem;">🚀 Trip Log</div>
+                        <div style="border-left: 3px solid #3b82f6; padding-left: 1rem; font-size: 0.85rem;">
+                            <div style="position: relative; margin-bottom: 1rem;">
+                                <div style="position: absolute; left: -1.35rem; width: 10px; height: 10px; background: #3b82f6; border-radius: 50%;"></div>
+                                <div style="font-weight: 600;">08:00 - 🚀 Berangkat Parapat</div>
+                                <div style="color: #64748b;">Penumpang: 45 | Kendaraan: 3 motor | BBM: 85% | Hour Meter: 2,345</div>
+                            </div>
+                            <div style="position: relative; margin-bottom: 1rem;">
+                                <div style="position: absolute; left: -1.35rem; width: 10px; height: 10px; background: #22c55e; border-radius: 50%;"></div>
+                                <div style="font-weight: 600;">08:35 - 🏁 Tiba Samosir</div>
+                                <div style="color: #64748b;">Penumpang turun: 30 | Naik: 15 | On-time</div>
+                            </div>
+                            <div style="position: relative; margin-bottom: 1rem;">
+                                <div style="position: absolute; left: -1.35rem; width: 10px; height: 10px; background: #3b82f6; border-radius: 50%;"></div>
+                                <div style="font-weight: 600;">09:00 - 🚀 Berangkat Samosir</div>
+                                <div style="color: #64748b;">Penumpang: 30 | Kendaraan: 2 motor</div>
+                            </div>
+                            <div style="position: relative; margin-bottom: 1rem;">
+                                <div style="position: absolute; left: -1.35rem; width: 10px; height: 10px; background: #f59e0b; border-radius: 50%;"></div>
+                                <div style="font-weight: 600; color: #f59e0b;">09:15 - ⚠️ Incident</div>
+                                <div style="background: #fef3c7; padding: 0.5rem; border-radius: 4px; margin-top: 0.25rem;">
+                                    Penumpang mabuk laut, diberikan pertolongan pertama. Kondisi stabil.
+                                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">→ Logged to Risk Module</div>
+                                </div>
+                            </div>
+                            <div style="position: relative;">
+                                <div style="position: absolute; left: -1.35rem; width: 10px; height: 10px; background: #22c55e; border-radius: 50%;"></div>
+                                <div style="font-weight: 600;">09:35 - 🏁 Tiba Parapat</div>
+                                <div style="color: #64748b;">Penumpang turun: 30 | BBM: 72% | Hour Meter: 2,347</div>
+                            </div>
+                        </div>
+
+                        <!-- Sign-off -->
+                        <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600;">Sign-off Nakhoda</div>
+                                <div style="font-size: 0.85rem; color: #64748b;">Ahmad Suryadi - 19 Jan 2026 17:00</div>
+                            </div>
+                            <button style="background: #22c55e; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">✏️ Sign-off</button>
+                        </div>
                     </div>
                 </div>
             </div>

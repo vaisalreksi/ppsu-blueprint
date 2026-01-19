@@ -126,7 +126,30 @@ FR-KEU-051: Sistem dapat menghitung penyusutan otomatis (SL/DD)
 FR-KEU-052: Sistem dapat mencatat revaluasi/impairment
 FR-KEU-053: Sistem dapat mencatat disposal/penghapusan aset
 FR-KEU-054: Sistem dapat generate jurnal penyusutan bulanan
+FR-KEU-055: Sistem dapat tracking penurunan nilai (impairment)
 ```
+
+**Metode Penyusutan:**
+
+| Metode | Rumus | Keterangan |
+|--------|-------|------------|
+| Straight Line (SL) | (Harga - Nilai Sisa) / Umur Ekonomis | Paling umum |
+| Double Declining (DD) | 2 × (1/Umur) × Nilai Buku | Depreciasi cepat |
+| Sum of Years | Sisa Umur / Sum × (Harga - NS) | Berdasar sisa umur |
+
+**Contoh Kartu Aset:**
+
+| Field | Nilai |
+|-------|-------|
+| Kode Aset | AST-KND-001 |
+| Nama Aset | Toyota Hiace 2023 |
+| Tanggal Perolehan | 15 Jan 2023 |
+| Harga Perolehan | Rp 425.000.000 |
+| Umur Ekonomis | 8 tahun |
+| Nilai Sisa | Rp 50.000.000 |
+| Penyusutan/Tahun | Rp 46.875.000 |
+| Akumulasi Penyusutan | Rp 140.625.000 |
+| Nilai Buku | Rp 284.375.000 |
 
 ### 4.7 Pendapatan per Unit Bisnis
 
@@ -146,7 +169,64 @@ FR-KEU-072: Sistem dapat generate Arus Kas (Cash Flow Statement)
 FR-KEU-073: Sistem dapat generate Laporan Perubahan Ekuitas
 FR-KEU-074: Sistem dapat generate Catatan atas Laporan Keuangan
 FR-KEU-075: Laporan dapat di-export ke Excel/PDF
+FR-KEU-076: Laporan sesuai standar PSAK/SAK Indonesia
 ```
+
+**Laporan Standar PSAK:**
+
+| Laporan | Standar | Frekuensi |
+|---------|---------|----------|
+| 📊 Neraca | PSAK 1 | Bulanan / Tahunan |
+| 📈 Laba Rugi | PSAK 1 | Bulanan / Tahunan |
+| 💰 Arus Kas | PSAK 2 | Bulanan / Tahunan |
+| 📝 Perubahan Ekuitas | PSAK 1 | Tahunan |
+| 📄 CALK | PSAK 1 | Tahunan |
+
+### 4.9 Audit Trail & Sistem Voucher
+
+> [!IMPORTANT]
+> Setiap transaksi harus memiliki audit trail lengkap untuk mendukung GCG
+
+```
+FR-KEU-080: Sistem generate nomor voucher otomatis terstandar
+FR-KEU-081: Sistem mencatat maker-checker-approver per transaksi
+FR-KEU-082: Sistem mencatat timestamp setiap perubahan status
+FR-KEU-083: Jurnal yang sudah posting tidak dapat diedit (immutable)
+FR-KEU-084: Sistem menyediakan history log lengkap per transaksi
+FR-KEU-085: Sistem dapat generate audit report per periode
+FR-KEU-086: Sistem link ke dokumen pendukung (attachment)
+```
+
+**Format Nomor Voucher:**
+
+| Jenis | Format | Contoh |
+|-------|--------|--------|
+| Jurnal Umum | JU-YYYYMM-NNNN | JU-202601-0001 |
+| Kas Masuk | KM-YYYYMM-NNNN | KM-202601-0025 |
+| Kas Keluar | KK-YYYYMM-NNNN | KK-202601-0018 |
+| Bank Masuk | BM-YYYYMM-NNNN | BM-202601-0012 |
+| Bank Keluar | BK-YYYYMM-NNNN | BK-202601-0045 |
+| Memorial | MR-YYYYMM-NNNN | MR-202601-0003 |
+
+**Otorisasi Multi-Level:**
+
+| Level | Role | Limit | Action |
+|-------|------|-------|--------|
+| 1 | Staff Akuntansi | All | Create (Maker) |
+| 2 | Supervisor | < Rp 50 jt | Approve |
+| 3 | Manajer Keuangan | < Rp 200 jt | Approve |
+| 4 | Direktur Keuangan | < Rp 1 M | Approve |
+| 5 | Direktur Utama | Unlimited | Approve |
+
+**Contoh Audit Trail:**
+
+| Timestamp | User | Action | Detail |
+|-----------|------|--------|--------|
+| 2026-01-19 08:15 | staff_akun | CREATE | Voucher JU-202601-0089 dibuat |
+| 2026-01-19 08:16 | staff_akun | ATTACH | Dokumen invoice_vendor.pdf dilampirkan |
+| 2026-01-19 09:30 | supervisor | APPROVE | Approved Level 1 |
+| 2026-01-19 10:15 | manajer_keu | APPROVE | Approved Level 2 |
+| 2026-01-19 10:16 | system | POST | Jurnal posted ke buku besar |
 
 ---
 
@@ -328,7 +408,18 @@ Fitur **Import Data** dari journal.id memastikan:
 - Transisi smooth tanpa kehilangan data
 - Perbandingan year-on-year tetap valid
 
+Fitur unggulan:
+- 📊 **Laporan Keuangan** - Neraca, L/R, Arus Kas sesuai PSAK
+- 📒 **General Ledger** - CoA hierarkis, jurnal, buku besar
+- 💹 **Budget Control** - Anggaran vs Realisasi, early warning
+- 💳 **AP/AR Monitoring** - Aging, payment schedule, reminder
+- 🏦 **Kas & Bank** - Transaksi, rekonsiliasi, saldo real-time
+- 🏢 **Aset & Penyusutan** - SL/DD/SYD, impairment tracking
+- 📊 **Pendapatan per Unit** - P&L per unit bisnis, consolidation
+- 📝 **Audit Trail** - Voucher, multi-level otorisasi, immutable
+
 ---
 
 *Dokumen ini disusun sebagai bagian dari analisis sistem PT PPSU Perseroda*
-*Versi: 1.0 | Tanggal: 17 Januari 2026*
+*Versi: 2.0 | Tanggal: 19 Januari 2026*
+*Update: Penambahan detail Aset/Penyusutan dan Sistem Audit Trail/Voucher*

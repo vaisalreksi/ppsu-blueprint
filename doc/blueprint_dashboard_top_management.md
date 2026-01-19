@@ -102,6 +102,57 @@ FR-DM-015: Menampilkan revenue breakdown by business unit
 | AR Collection Rate | > 90% | Modul Keuangan |
 | Budget Realization | > 85% | Modul Keuangan |
 
+### 4.2.1 Saldo Bank & Giro (Real-time)
+
+> [!IMPORTANT]
+> Direksi dapat melihat posisi kas dan bank kapan saja untuk keputusan likuiditas
+
+```
+FR-DM-016: Menampilkan saldo kas per rekening real-time
+FR-DM-017: Menampilkan saldo bank per rekening
+FR-DM-018: Menampilkan total cash position
+FR-DM-019: Menampilkan trend cashflow 7 hari terakhir
+```
+
+**Contoh Tampilan Saldo:**
+
+| Rekening | Bank | Saldo | Status |
+|----------|------|-------|--------|
+| 123-456-789 | Bank Mandiri | Rp 12.500.000.000 | ✅ |
+| 987-654-321 | Bank BNI | Rp 8.750.000.000 | ✅ |
+| 111-222-333 | Bank BRI | Rp 3.200.000.000 | ✅ |
+| **Total Cash** | | **Rp 24.450.000.000** | |
+
+### 4.2.2 Budget vs Aktual (Early Warning)
+
+> [!WARNING]
+> Sistem memberikan early warning jika realisasi mendekati atau melampaui anggaran
+
+```
+FR-DM-020: Menampilkan budget vs actual per unit
+FR-DM-021: Early warning indicator (80%, 90%, 100%)
+FR-DM-022: Drill-down ke detail per akun
+FR-DM-023: Trend realisasi bulanan
+```
+
+**Early Warning Indicator:**
+
+| % Realisasi | Warna | Status | Aksi |
+|-------------|:-----:|--------|------|
+| < 80% | 🟢 | Normal | - |
+| 80-90% | 🟡 | Warning | Notifikasi Manajer |
+| 90-100% | 🟠 | Alert | Notifikasi Direktur |
+| > 100% | 🔴 | Over Budget | Eskalasi Dirut |
+
+**Contoh Dashboard Budget:**
+
+| Unit | Budget | Actual | % | Status |
+|------|--------|--------|---|--------|
+| Transportasi | Rp 25 M | Rp 21 M | 84% | 🟡 |
+| PRSU | Rp 15 M | Rp 11 M | 73% | 🟢 |
+| Teknik | Rp 40 M | Rp 38 M | 95% | 🟠 |
+| HC | Rp 20 M | Rp 18 M | 90% | 🟠 |
+
 ### 4.3 Operational Overview
 
 #### 4.3.1 Transportasi (dari Modul Transportasi)
@@ -215,6 +266,40 @@ FR-DM-072: Generate PDF/PPT executive report
 FR-DM-073: Schedule automated report delivery
 FR-DM-074: Export data untuk analysis
 ```
+
+### 4.8 Approval Center (Otorisasi)
+
+> [!IMPORTANT]
+> Direksi dapat melakukan approval langsung dari dashboard tanpa masuk ke masing-masing modul
+
+```
+FR-DM-080: Menampilkan daftar pending approval dari semua modul
+FR-DM-081: Filter approval by modul/kategori
+FR-DM-082: Quick approve/reject dengan komentar
+FR-DM-083: View detail sebelum approve
+FR-DM-084: Batch approval untuk item sejenis
+FR-DM-085: Notifikasi jika approval aging > SLA
+FR-DM-086: Audit trail semua keputusan approval
+```
+
+**Kategori Approval:**
+
+| Modul | Jenis Approval | SLA |
+|-------|----------------|-----|
+| Keuangan | Jurnal > Rp 100 jt | 4 jam |
+| Keuangan | Payment voucher | 4 jam |
+| HC | Payroll run | 24 jam |
+| PRSU | Event booking | 24 jam |
+| Teknik | Termin pembayaran | 8 jam |
+| Bagian Umum | PO > Rp 50 jt | 8 jam |
+
+**Contoh Pending Approval:**
+
+| No | Modul | Jenis | Nilai | Requested | Aging | Action |
+|----|-------|-------|-------|-----------|-------|--------|
+| 1 | Keuangan | Payment | Rp 125 jt | 08:30 | ⚠️ 3 jam | ✅❌ |
+| 2 | PRSU | Booking | Rp 85 jt | 14:00 | 🟢 1 jam | ✅❌ |
+| 3 | Teknik | Termin | Rp 450 jt | Yesterday | 🔴 25 jam | ✅❌ |
 
 ---
 
@@ -403,12 +488,16 @@ Dashboard Top Management akan:
 
 Fitur unggulan:
 - 📊 **Consolidated KPIs** - Semua metric dalam satu view
-- 📈 **Real-time Data** - Update setiap 5-15 menit
+- 💰 **Kinerja Keuangan** - Revenue, Profit, Cashflow real-time
+- 🏢 **Kinerja Unit Bisnis** - Transportasi, PRSU, Teknik, HC
+- 📈 **Budget vs Aktual** - Early warning 80%/90%/100%
+- ⚠️ **Risiko & Temuan Audit** - Heat map, CACM summary
+- 🏦 **Saldo Bank & Giro** - Posisi kas real-time
+- ✅ **Approval Center** - Otorisasi dari dashboard
 - 🔔 **Alert Center** - Konsolidasi dari semua modul
-- 📱 **Mobile Ready** - Akses dari mana saja
-- 📋 **Auto Reports** - Scheduled executive reports
 
 ---
 
 *Dokumen ini disusun sebagai bagian dari analisis sistem PT PPSU Perseroda*
-*Versi: 1.0 | Tanggal: 18 Januari 2026*
+*Versi: 2.0 | Tanggal: 19 Januari 2026*
+*Update: Penambahan Saldo Bank/Giro, Budget Early Warning, dan Approval Center*

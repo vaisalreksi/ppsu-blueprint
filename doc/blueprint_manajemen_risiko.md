@@ -172,7 +172,76 @@ FR-RM-044: Dashboard menampilkan KRI status overview
 FR-RM-045: Early warning jika ada risiko baru level high/extreme
 ```
 
-### 4.6 Reporting
+### 4.6 Monitoring Pengelolaan Manajemen Risiko
+
+> [!IMPORTANT]
+> Monitoring pengelolaan memastikan semua risiko ditangani sesuai rencana mitigasi
+
+```
+FR-RM-046: Dashboard menampilkan summary status mitigasi (Selesai/Ongoing/Overdue/Pending)
+FR-RM-047: Sistem menampilkan progress mitigasi per kategori risiko
+FR-RM-048: Sistem menampilkan aging mitigasi yang belum selesai
+FR-RM-049: Sistem dapat escalate mitigasi overdue ke manajemen
+FR-RM-050: Sistem mengirim reminder ke PIC mendekati deadline
+FR-RM-051: Dashboard menampilkan trend penyelesaian mitigasi
+```
+
+**Summary Status Mitigasi:**
+
+| Status | Jumlah | Keterangan |
+|--------|--------|------------|
+| ✅ Selesai | 28 | Mitigasi sudah selesai & verified |
+| 🔄 Ongoing | 8 | Mitigasi sedang berjalan |
+| ⚠️ Overdue | 2 | Lewat deadline, perlu escalation |
+| ⏳ Pending | 5 | Belum dimulai |
+
+**Progress Mitigasi per Kategori:**
+
+| Kategori | Selesai/Total | Progress |
+|----------|---------------|----------|
+| 💰 Keuangan | 8/10 | 80% ✅ |
+| ⚙️ Operasional | 12/15 | 80% ✅ |
+| 🏗️ Proyek | 3/8 | 37% ⚠️ |
+| 👥 SDM | 5/5 | 100% ✅ |
+
+### 4.7 Arsip Digital Risiko
+
+> [!NOTE]
+> Arsip digital menyimpan seluruh dokumen pendukung risiko dalam repository terpusat
+
+```
+FR-RM-055: Sistem dapat upload dokumen risiko (Evidence, Laporan, Foto)
+FR-RM-056: Sistem mengkategorikan dokumen per risiko dan periode
+FR-RM-057: Sistem menyediakan fitur search dan filter dokumen
+FR-RM-058: Sistem dapat preview dokumen tanpa download
+FR-RM-059: Sistem dapat export dokumen (single/batch)
+FR-RM-060: Sistem mencatat histori akses dokumen (audit trail)
+FR-RM-061: Sistem dapat link dokumen ke risiko tertentu
+```
+
+**Jenis Dokumen Arsip:**
+
+| Jenis | Deskripsi | Contoh |
+|-------|-----------|--------|
+| 📄 Dokumen | Dokumen formal risiko | Risk_Assessment_Q1_2026.pdf |
+| 📷 Evidence | Bukti pendukung (foto, screenshot) | Foto_Kerusakan_Armada.jpg |
+| 📝 Laporan | Laporan mitigasi/progress | Laporan_Mitigasi_R001.docx |
+
+**Contoh Daftar Arsip:**
+
+| Risk ID | Nama Dokumen | Jenis | Tanggal | Uploader |
+|---------|--------------|-------|---------|----------|
+| R-2026-001 | 📄 Risk_Assessment_Detail.pdf | Dokumen | 18 Jan 2026 | Risk Officer |
+| R-2026-001 | 📷 Evidence_Piutang_Macet.png | Evidence | 15 Jan 2026 | Staff Keuangan |
+| R-2026-002 | 📝 Laporan_Mitigasi_Proyek.docx | Laporan | 14 Jan 2026 | Manajer Teknik |
+
+**Summary Arsip:**
+- Total Dokumen: 89
+- 📄 Dokumen: 25
+- 📷 Evidence: 42
+- 📝 Laporan: 22
+
+### 4.8 Reporting
 
 ```
 FR-RM-050: Sistem dapat generate laporan risk profile per unit
@@ -181,6 +250,122 @@ FR-RM-052: Sistem dapat generate laporan mitigasi progress
 FR-RM-053: Sistem dapat export laporan untuk Komisaris/Direksi
 FR-RM-054: Sistem dapat generate laporan untuk regulator
 ```
+
+### 4.7 Hybrid Input System (Manual + Otomatis)
+
+> [!IMPORTANT]
+> Sistem menggunakan pendekatan hybrid: input manual untuk Risk Register, 
+> dan input otomatis untuk KRI dari data modul lain secara real-time.
+
+#### 4.7.1 Manual Input - Form Risk Register
+
+```
+FR-RM-060: Sistem menyediakan form input risiko baru
+FR-RM-061: Form dapat memilih kategori risiko (dropdown)
+FR-RM-062: Form dapat memilih unit bisnis (dropdown)
+FR-RM-063: Form dapat input penyebab dan dampak (text)
+FR-RM-064: Form dapat memilih risk owner (dropdown dari master karyawan)
+FR-RM-065: Form dapat input assessment (L × I) dengan skala 1-5
+FR-RM-066: Form dapat input rencana mitigasi
+FR-RM-067: Sistem generate risk code otomatis (R-XXXX-NNN)
+```
+
+**Form Fields Risk Input:**
+
+| Field | Type | Required | Source |
+|-------|------|:--------:|--------|
+| Nama Risiko | Text | ✅ | Manual input |
+| Kategori | Dropdown | ✅ | Master kategori |
+| Unit Bisnis | Dropdown | ✅ | Master unit |
+| Deskripsi | Textarea | ✅ | Manual input |
+| Penyebab (Cause) | Textarea | ✅ | Manual input |
+| Dampak (Effect) | Textarea | ✅ | Manual input |
+| Risk Owner | Dropdown | ✅ | Master karyawan |
+| Likelihood (1-5) | Slider/Radio | ✅ | Manual select |
+| Impact (1-5) | Slider/Radio | ✅ | Manual select |
+| Strategi Mitigasi | Dropdown | ❌ | Terminate/Treat/Transfer/Tolerate |
+| Rencana Mitigasi | Textarea | ❌ | Manual input |
+| PIC Mitigasi | Dropdown | ❌ | Master karyawan |
+| Deadline Mitigasi | Datepicker | ❌ | Manual input |
+
+#### 4.7.2 Otomatis - KRI Sync dari Modul Lain
+
+```
+FR-RM-070: Sistem secara otomatis mengambil data KRI dari modul lain
+FR-RM-071: Data KRI di-sync setiap 15 menit (atau real-time)
+FR-RM-072: Dashboard menampilkan source module per KRI
+FR-RM-073: User dapat click drill-down ke modul asal
+FR-RM-074: Sistem auto-calculate KRI status (green/yellow/red)
+```
+
+**KRI Auto-Sync Configuration:**
+
+| KRI | API Source | Modul | Sync Frequency |
+|-----|------------|-------|----------------|
+| AR Aging > 90 hari | `/api/keuangan/ar/aging` | Keuangan | 15 menit |
+| Project SPI Average | `/api/teknik/projects/spi` | Teknik | 1 jam |
+| Ferry Capacity | `/api/transportasi/capacity` | Transportasi | Real-time |
+| PRSU Occupancy | `/api/prsu/occupancy` | PRSU | 1 jam |
+| Employee Turnover | `/api/hr/turnover` | Human Capital | Harian |
+| Open Audit Findings | `/api/cacm/findings/open` | CACM | 1 jam |
+
+#### 4.7.3 Auto-Generate Risk dari KRI Breach
+
+```
+FR-RM-080: Sistem dapat auto-create risk jika KRI breach threshold
+FR-RM-081: Auto-generated risk memiliki status "Identified - Auto"
+FR-RM-082: Sistem assign risk owner berdasarkan KRI owner
+FR-RM-083: Sistem notifikasi risk owner untuk review & complete assessment
+FR-RM-084: Auto-risk dapat di-merge dengan existing risk jika duplicate
+```
+
+**Auto-Generate Flow:**
+
+```
+KRI Breach (Red) → Check if related risk exists?
+                        │
+            ┌───────────┴───────────┐
+            │ NO                    │ YES
+            ▼                       ▼
+    Create New Risk          Link ke Existing Risk
+    (Status: Auto-Generated)     (Update timestamp)
+            │                       │
+            ▼                       ▼
+    Notify Risk Owner ◀──────── Notify Risk Owner
+    "Complete assessment"       "KRI breach - review mitigation"
+```
+
+**Auto-Generated Risk Template:**
+
+```
+Risk Code: R-AUTO-[YYYY]-[NNN]
+Nama: "[KRI Name] - KRI Breach Alert"
+Kategori: (dari KRI category)
+Unit: (dari KRI unit)
+Deskripsi: "Auto-generated dari KRI breach: [KRI Name] at [value]% (threshold: [threshold]%)"
+Risk Owner: (dari KRI owner)
+Status: Identified - Auto
+Likelihood: TBD (to be assessed)
+Impact: TBD (to be assessed)
+```
+
+#### 4.7.4 Drill-Down Links
+
+```
+FR-RM-085: Setiap KRI memiliki tombol "View Source"
+FR-RM-086: Click akan navigate ke dashboard modul asal
+FR-RM-087: Link menampilkan context (periode, filter)
+```
+
+**Drill-Down Mapping:**
+
+| KRI | Drill-Down To | URL |
+|-----|---------------|-----|
+| AR Aging | Keuangan - AR Aging Report | `/modul_keuangan?tab=ar_aging` |
+| Project SPI | Teknik - Project List | `/modul_teknik?tab=projects` |
+| Ferry Capacity | Transportasi - Live Monitoring | `/modul_transportasi?tab=monitoring` |
+| PRSU Occupancy | PRSU - Calendar | `/modul_prsu?tab=calendar` |
+| Employee Turnover | HC - Dashboard | `/modul_hc?tab=dashboard` |
 
 ---
 
@@ -362,13 +547,18 @@ Sistem Manajemen Risiko akan:
 > - **Mengintegrasikan** data dari semua modul
 
 Fitur unggulan:
-- 🗂️ **Risk Register** - Daftar risiko digital terstruktur
-- 📊 **Heat Map** - Visualisasi matriks risiko
-- 📈 **KRI Monitoring** - Early warning real-time
-- 🔔 **Alert System** - Notifikasi otomatis
-- 📋 **Integrated** - Data dari semua modul
+- 🗂️ **Risk Register** - Daftar risiko digital terstruktur dengan kategorisasi
+- 📊 **Risk Assessment** - Inherent vs Residual Risk (L × I)
+- 🟥 **Heat Map** - Visualisasi matriks risiko 5×5
+- 📊 **Monitoring Pengelolaan** - Progress mitigasi per kategori & aging
+- 📝 **KRI Monitoring** - Early warning real-time dari semua modul
+- 📁 **Arsip Digital** - Repository dokumen & evidence terpusat
+- 🔔 **Alert System** - Notifikasi otomatis untuk breach threshold
+- 🔗 **Integrated** - Data dari semua modul
 
 ---
 
 *Dokumen ini disusun sebagai bagian dari analisis sistem PT PPSU Perseroda*
-*Versi: 1.0 | Tanggal: 18 Januari 2026*
+*Versi: 2.0 | Tanggal: 19 Januari 2026*
+*Update: Penambahan Monitoring Pengelolaan MR dan Arsip Digital*
+```

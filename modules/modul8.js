@@ -77,6 +77,40 @@ const modul_teknik = {
                          <strong>Pembayaran:</strong> → Jurnal Bank → Piutang<br>
                          <strong>Retensi:</strong> → Tracking & release otomatis<br>
                          <strong>Aging:</strong> → AR aging per proyek`
+            },
+            {
+                icon: '💼',
+                iconBg: 'rgba(236, 72, 153, 0.1)',
+                iconColor: '#ec4899',
+                title: 'Manajemen Project Lifecycle',
+                content: `<strong>📄 Tender:</strong> Pengajuan, dokumen, evaluasi<br>
+                         <strong>📊 RAB:</strong> Rencana Anggaran Biaya (penawaran)<br>
+                         <strong>📝 RAP:</strong> Rencana Anggaran Pelaksanaan<br>
+                         <strong>💰 Pelaksanaan:</strong> Progress, cost control<br>
+                         <strong>🧾 Penagihan:</strong> Termin, BAP, invoice`
+            },
+            {
+                icon: '📦',
+                iconBg: 'rgba(34, 197, 94, 0.1)',
+                iconColor: '#22c55e',
+                title: 'PBJ Konstruksi (HPS & Tender)',
+                content: `<strong>📊 HPS:</strong> Harga Perkiraan Sendiri<br>
+                         <strong>📄 Dokumen:</strong> Spesifikasi teknis, gambar<br>
+                         <strong>📩 Tender:</strong> Undangan, aanwijzing, evaluasi<br>
+                         <strong>🏆 Penetapan:</strong> Pemenang, kontrak<br>
+                         <strong>🔗 PL:</strong> Penunjukan Langsung (< threshold)`
+            },
+            {
+                icon: '📓',
+                iconBg: 'rgba(239, 68, 68, 0.1)',
+                iconColor: '#ef4444',
+                title: 'Log Konstruksi (Daily Log)',
+                content: `<strong>📅 Harian:</strong> Catatan aktivitas operasional<br>
+                         <strong>📦 Material:</strong> In/out, stock, pemakaian<br>
+                         <strong>👷 Tenaga Kerja:</strong> Jumlah, skill, attendance<br>
+                         <strong>🏗️ Progress:</strong> % fisik, foto dokumentasi<br>
+                         <strong>⚠️ K3:</strong> Safety checklist, insiden, APD<br>
+                         <strong>🚨 Risiko:</strong> Identifikasi, mitigasi, link ke Modul 9`
             }
         ]
     },
@@ -87,50 +121,70 @@ const modul_teknik = {
     diagram: {
         title: 'Diagram Alur - Sistem Teknik dan Perencanaan',
         mermaid: `flowchart TB
-subgraph PROJECT["🏗️ MANAJEMEN PROYEK"]
+subgraph PBJ["📦 PBJ KONSTRUKSI"]
     direction TB
-    P1[Setup<br>Project] --> P2[Define<br>WBS]
-    P2 --> P3[Baseline<br>Schedule]
-    P3 --> P4[Execute<br>& Track]
+    J1[📊 Susun<br>HPS] --> J2{Nilai?}
+    J2 -->|< 50jt| J3[PL<br>Langsung]
+    J2 -->|≥ 50jt| J4[Proses<br>Tender]
+    J4 --> J5[Undangan &<br>Aanwijzing]
+    J5 --> J6[Evaluasi<br>Penawaran]
+    J6 --> J7[🏆 Pemenang<br>& Kontrak]
+    J3 --> J7
 end
 
-subgraph CCTV["📹 CCTV MONITORING"]
+subgraph PROJECT["💼 PROJECT LIFECYCLE"]
     direction TB
-    C1[IP Camera<br>di Site] --> C2[Stream to<br>Server]
-    C2 --> C3[Dashboard<br>Multi-View]
-    C2 --> C4[Recording<br>30 hari]
-    C3 --> C5[Remote<br>Monitoring]
+    P1[📄 RAB<br>Penawaran] --> P2[Kontrak]
+    P2 --> P3[📋 RAP<br>Pelaksanaan]
+    P3 --> P4[Eksekusi<br>Proyek]
+    P4 --> P5[Progress<br>Tracking]
 end
 
-subgraph PROGRESS["📈 ACTUAL vs PLAN"]
+subgraph LOG["📓 LOG KONSTRUKSI"]
     direction TB
-    R1[Input<br>Progress %] --> R2[Compare vs<br>Baseline]
-    R2 --> R3[Calculate<br>SPI]
-    R3 --> R4{SPI<br>Check}
-    R4 -->|≥ 1.0| R5[🟢 On Track]
-    R4 -->|0.8-0.99| R6[🟡 Warning]
-    R4 -->|< 0.8| R7[🔴 Critical]
+    L1[📅 Daily<br>Log] --> L2[📦 Material<br>In/Out]
+    L1 --> L3[👷 Tenaga<br>Kerja]
+    L1 --> L4[🏗️ Progress<br>Fisik]
+    L1 --> L5[⚠️ K3<br>Checklist]
+    L5 --> L6{Insiden?}
+    L6 -->|Ya| L7[🚨 Link ke<br>Modul Risiko]
+    L6 -->|Tidak| L8[✅ OK]
 end
 
-subgraph BILLING["💰 PENAGIHAN TERMIN"]
+subgraph MONITOR["📹 MONITORING"]
+    direction TB
+    M1[CCTV<br>Live] --> M2[Remote<br>View]
+    M3[S-Curve<br>Analysis] --> M4{SPI<br>Check}
+    M4 -->|≥ 1.0| M5[🟢 On Track]
+    M4 -->|0.8-0.99| M6[🟡 Warning]
+    M4 -->|< 0.8| M7[🔴 Critical]
+end
+
+subgraph BILLING["💰 PENAGIHAN"]
     direction TB
     B1[Milestone<br>Achieved] --> B2[Generate<br>BAP]
-    B2 --> B3[Approval<br>BAP]
-    B3 --> B4[Generate<br>Invoice]
-    B4 --> B5[Post to<br>Keuangan]
+    B2 --> B3[Approval]
+    B3 --> B4[Invoice<br>Termin]
+    B4 --> B5[Post ke<br>Keuangan]
 end
 
-P4 --> C1
-P4 --> R1
-R5 --> B1
-R6 --> B1
+J7 --> P1
+P5 --> L1
+P5 --> M1
+P5 --> M3
+L4 --> M3
+M5 --> B1
+M6 --> B1
 B5 --> KEU[(💰 MODUL<br>KEUANGAN)]
+L7 --> RSK[(⚠️ MODUL<br>RISIKO)]
 
+style PBJ fill:#dcfce7,stroke:#22c55e,color:#166534
 style PROJECT fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
-style CCTV fill:#dcfce7,stroke:#22c55e,color:#166534
-style PROGRESS fill:#f3e8ff,stroke:#a855f7,color:#581c87
+style LOG fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+style MONITOR fill:#f3e8ff,stroke:#a855f7,color:#581c87
 style BILLING fill:#fef3c7,stroke:#f59e0b,color:#78350f
-style KEU fill:#fce7f3,stroke:#ec4899,color:#831843`
+style KEU fill:#fce7f3,stroke:#ec4899,color:#831843
+style RSK fill:#fef3c7,stroke:#f59e0b,color:#78350f`
     },
 
     // ============================================
@@ -376,6 +430,378 @@ style KEU fill:#fce7f3,stroke:#ec4899,color:#831843`
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- Project Detail with RAB/RAP -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);">
+                        <span class="mockup-title">💼 Detail Proyek - Jembatan Sei Deli</span>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- Project Info -->
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+                                <div style="font-weight: 600; margin-bottom: 0.75rem;">📝 Informasi Proyek</div>
+                                <div style="display: grid; gap: 0.5rem; font-size: 0.85rem;">
+                                    <div><span style="color: #64748b;">No. Kontrak:</span> SPK/2025/PPSU/045</div>
+                                    <div><span style="color: #64748b;">Pemberi Kerja:</span> Pemprov SUMUT</div>
+                                    <div><span style="color: #64748b;">Jenis:</span> Pekerjaan Konstruksi Jembatan</div>
+                                    <div><span style="color: #64748b;">Durasi:</span> 180 hari kalender</div>
+                                    <div><span style="color: #64748b;">Masa Pemeliharaan:</span> 180 hari</div>
+                                </div>
+                            </div>
+                            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+                                <div style="font-weight: 600; margin-bottom: 0.75rem;">💰 Nilai Proyek</div>
+                                <div style="display: grid; gap: 0.5rem; font-size: 0.85rem;">
+                                    <div><span style="color: #64748b;">Nilai Kontrak:</span> <strong>Rp 45.000.000.000</strong></div>
+                                    <div><span style="color: #64748b;">RAB (Penawaran):</span> Rp 48.500.000.000</div>
+                                    <div><span style="color: #64748b;">RAP (Pelaksanaan):</span> Rp 38.250.000.000</div>
+                                    <div><span style="color: #64748b;">Est. Margin:</span> <span style="color: #22c55e;">15% (Rp 6.75 M)</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RAB vs RAP Comparison -->
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">📊 RAB vs RAP (Anggaran)</div>
+                        <table class="mockup-table" style="font-size: 0.8rem;">
+                            <thead>
+                                <tr>
+                                    <th>Item Pekerjaan</th>
+                                    <th style="text-align: right;">RAB (Penawaran)</th>
+                                    <th style="text-align: right;">RAP (Pelaksanaan)</th>
+                                    <th style="text-align: right;">Selisih</th>
+                                    <th>Margin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Pekerjaan Persiapan</td>
+                                    <td style="text-align: right;">2.500.000.000</td>
+                                    <td style="text-align: right;">2.125.000.000</td>
+                                    <td style="text-align: right; color: #22c55e;">+375.000.000</td>
+                                    <td><span style="color: #22c55e;">15%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Struktur Bawah (Pondasi)</td>
+                                    <td style="text-align: right;">18.000.000.000</td>
+                                    <td style="text-align: right;">15.300.000.000</td>
+                                    <td style="text-align: right; color: #22c55e;">+2.700.000.000</td>
+                                    <td><span style="color: #22c55e;">15%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Struktur Atas (Lantai)</td>
+                                    <td style="text-align: right;">15.000.000.000</td>
+                                    <td style="text-align: right;">12.825.000.000</td>
+                                    <td style="text-align: right; color: #22c55e;">+2.175.000.000</td>
+                                    <td><span style="color: #22c55e;">14.5%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Finishing & Mekanikal</td>
+                                    <td style="text-align: right;">8.000.000.000</td>
+                                    <td style="text-align: right;">8.000.000.000</td>
+                                    <td style="text-align: right;">0</td>
+                                    <td><span style="color: #f59e0b;">0%</span></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr style="background: #fce7f3;">
+                                    <td><strong>TOTAL</strong></td>
+                                    <td style="text-align: right;"><strong>43.500.000.000</strong></td>
+                                    <td style="text-align: right;"><strong>38.250.000.000</strong></td>
+                                    <td style="text-align: right; color: #22c55e;"><strong>+5.250.000.000</strong></td>
+                                    <td><strong>12%</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PBJ Process -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);">
+                        <span class="mockup-title">📦 PBJ Konstruksi - HPS & Tender</span>
+                        <div class="mockup-actions">
+                            <button class="mockup-btn" style="background: white; color: #0d9488;">+ Buat Pengadaan</button>
+                        </div>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- PBJ Status Cards -->
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="background: #f0fdfa; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #0d9488;">3</div>
+                                <div style="font-size: 0.7rem; color: #0d9488;">Proses HPS</div>
+                            </div>
+                            <div style="background: #dbeafe; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #1d4ed8;">2</div>
+                                <div style="font-size: 0.7rem; color: #1d4ed8;">Tender Aktif</div>
+                            </div>
+                            <div style="background: #fef3c7; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #92400e;">1</div>
+                                <div style="font-size: 0.7rem; color: #92400e;">Evaluasi</div>
+                            </div>
+                            <div style="background: #dcfce7; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #166534;">5</div>
+                                <div style="font-size: 0.7rem; color: #166534;">Kontrak Aktif</div>
+                            </div>
+                        </div>
+
+                        <!-- HPS Form Sample -->
+                        <div style="background: #f0fdfa; border: 1px solid #14b8a6; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; margin-bottom: 0.75rem;">📊 Penyusunan HPS - Pekerjaan Drainase</div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; font-size: 0.85rem;">
+                                <div><span style="color: #64748b;">Pagu Anggaran:</span> Rp 5.000.000.000</div>
+                                <div><span style="color: #64748b;">Metode:</span> Tender Terbuka</div>
+                                <div><span style="color: #64748b;">Estimasi HPS:</span> Rp 4.750.000.000</div>
+                                <div><span style="color: #64748b;">Status:</span> <span style="background: #f59e0b; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">Draft</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Tender List -->
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">📄 Proses Tender Aktif</div>
+                        <table class="mockup-table" style="font-size: 0.8rem;">
+                            <thead>
+                                <tr>
+                                    <th>Paket Pekerjaan</th>
+                                    <th>HPS</th>
+                                    <th>Peserta</th>
+                                    <th>Tahap</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Pekerjaan Jalan Akses</td>
+                                    <td>Rp 3.2 M</td>
+                                    <td>5 vendor</td>
+                                    <td>Evaluasi Harga</td>
+                                    <td><span style="background: #f59e0b; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.65rem;">🔄 Proses</span></td>
+                                </tr>
+                                <tr style="background: #dcfce7;">
+                                    <td>Pengadaan Material Beton</td>
+                                    <td>Rp 1.8 M</td>
+                                    <td>3 vendor</td>
+                                    <td>Penetapan Pemenang</td>
+                                    <td><span style="background: #22c55e; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.65rem;">✅ Final</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Tender Flow -->
+                        <div style="margin-top: 1rem; font-size: 0.8rem;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem;">📊 Alur Tender</div>
+                            <div style="display: flex; justify-content: space-between; background: #f8fafc; padding: 0.75rem; border-radius: 8px;">
+                                <div style="text-align: center;">
+                                    <div style="background: #14b8a6; color: white; padding: 0.375rem; border-radius: 6px; margin-bottom: 0.25rem;">📊</div>
+                                    <div>HPS</div>
+                                </div>
+                                <div style="display: flex; align-items: center;">→</div>
+                                <div style="text-align: center;">
+                                    <div style="background: #3b82f6; color: white; padding: 0.375rem; border-radius: 6px; margin-bottom: 0.25rem;">📩</div>
+                                    <div>Undangan</div>
+                                </div>
+                                <div style="display: flex; align-items: center;">→</div>
+                                <div style="text-align: center;">
+                                    <div style="background: #8b5cf6; color: white; padding: 0.375rem; border-radius: 6px; margin-bottom: 0.25rem;">📝</div>
+                                    <div>Aanwijzing</div>
+                                </div>
+                                <div style="display: flex; align-items: center;">→</div>
+                                <div style="text-align: center;">
+                                    <div style="background: #f59e0b; color: white; padding: 0.375rem; border-radius: 6px; margin-bottom: 0.25rem;">📥</div>
+                                    <div>Penawaran</div>
+                                </div>
+                                <div style="display: flex; align-items: center;">→</div>
+                                <div style="text-align: center;">
+                                    <div style="background: #ec4899; color: white; padding: 0.375rem; border-radius: 6px; margin-bottom: 0.25rem;">⚖️</div>
+                                    <div>Evaluasi</div>
+                                </div>
+                                <div style="display: flex; align-items: center;">→</div>
+                                <div style="text-align: center;">
+                                    <div style="background: #22c55e; color: white; padding: 0.375rem; border-radius: 6px; margin-bottom: 0.25rem;">🏆</div>
+                                    <div>Pemenang</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Construction Log -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                        <span class="mockup-title">📓 Log Konstruksi Harian</span>
+                        <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">19 Januari 2026</span>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- Daily Summary -->
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="background: #dbeafe; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1rem; font-weight: 700; color: #1d4ed8;">65%</div>
+                                <div style="font-size: 0.7rem; color: #1d4ed8;">Progress Fisik</div>
+                            </div>
+                            <div style="background: #dcfce7; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1rem; font-weight: 700; color: #166534;">45</div>
+                                <div style="font-size: 0.7rem; color: #166534;">Tenaga Kerja</div>
+                            </div>
+                            <div style="background: #f3e8ff; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1rem; font-weight: 700; color: #7c3aed;">3</div>
+                                <div style="font-size: 0.7rem; color: #7c3aed;">Alat Berat</div>
+                            </div>
+                            <div style="background: #dcfce7; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1rem; font-weight: 700; color: #166534;">0</div>
+                                <div style="font-size: 0.7rem; color: #166534;">Insiden K3</div>
+                            </div>
+                        </div>
+
+                        <!-- Daily Activities -->
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">📝 Aktivitas Hari Ini</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+                            <div style="background: #f8fafc; padding: 0.75rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500;">Pengecoran Pier 5 (Section A)</div>
+                                    <div style="font-size: 0.75rem; color: #64748b;">08:00 - 15:00 | Volume: 45 m³</div>
+                                </div>
+                                <span style="background: #22c55e; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">✅ Selesai</span>
+                            </div>
+                            <div style="background: #f8fafc; padding: 0.75rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500;">Pemasangan Bekisting Pier 6</div>
+                                    <div style="font-size: 0.75rem; color: #64748b;">08:00 - 17:00 | Progress: 60%</div>
+                                </div>
+                                <span style="background: #3b82f6; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">🔄 Ongoing</span>
+                            </div>
+                        </div>
+
+                        <!-- Material Log -->
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">📦 Log Material</div>
+                        <table class="mockup-table" style="font-size: 0.8rem; margin-bottom: 1rem;">
+                            <thead>
+                                <tr>
+                                    <th>Material</th>
+                                    <th>In</th>
+                                    <th>Out</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Beton Ready Mix K-350</td>
+                                    <td style="color: #22c55e;">+48 m³</td>
+                                    <td style="color: #ef4444;">-45 m³</td>
+                                    <td>3 m³</td>
+                                    <td><span style="background: #22c55e; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.65rem;">OK</span></td>
+                                </tr>
+                                <tr style="background: #fef3c7;">
+                                    <td>Besi Tulangan D-25</td>
+                                    <td style="color: #22c55e;">+2 ton</td>
+                                    <td style="color: #ef4444;">-3.5 ton</td>
+                                    <td style="font-weight: 600;">5.2 ton</td>
+                                    <td><span style="background: #f59e0b; color: white; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.65rem;">⚠️ Low</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Manpower -->
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">👷 Tenaga Kerja</div>
+                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-bottom: 1rem; font-size: 0.8rem;">
+                            <div style="background: #f8fafc; padding: 0.5rem; border-radius: 6px; text-align: center;">
+                                <div style="font-weight: 600;">12</div>
+                                <div style="color: #64748b; font-size: 0.7rem;">Tukang Batu</div>
+                            </div>
+                            <div style="background: #f8fafc; padding: 0.5rem; border-radius: 6px; text-align: center;">
+                                <div style="font-weight: 600;">8</div>
+                                <div style="color: #64748b; font-size: 0.7rem;">Tukang Besi</div>
+                            </div>
+                            <div style="background: #f8fafc; padding: 0.5rem; border-radius: 6px; text-align: center;">
+                                <div style="font-weight: 600;">15</div>
+                                <div style="color: #64748b; font-size: 0.7rem;">Pekerja</div>
+                            </div>
+                            <div style="background: #f8fafc; padding: 0.5rem; border-radius: 6px; text-align: center;">
+                                <div style="font-weight: 600;">3</div>
+                                <div style="color: #64748b; font-size: 0.7rem;">Operator</div>
+                            </div>
+                            <div style="background: #f8fafc; padding: 0.5rem; border-radius: 6px; text-align: center;">
+                                <div style="font-weight: 600;">7</div>
+                                <div style="color: #64748b; font-size: 0.7rem;">Mandor/Staf</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- K3 Safety Log -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                        <span class="mockup-title">⚠️ K3 (Keselamatan & Kesehatan Kerja)</span>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- K3 Status -->
+                        <div style="background: #dcfce7; border: 2px solid #22c55e; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;">
+                            <div style="font-size: 2rem;">✅</div>
+                            <div>
+                                <div style="font-weight: 600; color: #166534;">Status K3 Hari Ini: AMAN</div>
+                                <div style="font-size: 0.85rem; color: #64748b;">0 Insiden | Checklist lengkap | APD 100%</div>
+                            </div>
+                        </div>
+
+                        <!-- K3 Checklist -->
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">☑️ Checklist Harian</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
+                            <div style="background: #dcfce7; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.85rem;">✅ Safety Briefing pagi (07:00)</div>
+                            <div style="background: #dcfce7; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.85rem;">✅ APD lengkap semua pekerja</div>
+                            <div style="background: #dcfce7; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.85rem;">✅ Area kerja diberi rambu</div>
+                            <div style="background: #dcfce7; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.85rem;">✅ P3K tersedia di lokasi</div>
+                            <div style="background: #dcfce7; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.85rem;">✅ Alat berat inspeksi OK</div>
+                            <div style="background: #dcfce7; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.85rem;">✅ APAR tersedia & aktif</div>
+                        </div>
+
+                        <!-- Risk Integration -->
+                        <div style="background: #fef3c7; border: 1px solid #f59e0b; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem;">🚨 Risiko Aktif (Link ke Modul 9)</div>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span>🟡 Cuaca ekstrem - risiko petir saat pengecoran</span>
+                                    <button style="background: #f59e0b; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; cursor: pointer;">🔗 Detail</button>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span>🟡 Material shortage - stock besi menipis</span>
+                                    <button style="background: #f59e0b; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; cursor: pointer;">🔗 Detail</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo Documentation -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+                        <span class="mockup-title">📷 Dokumentasi Foto Progress</span>
+                        <div class="mockup-actions">
+                            <button class="mockup-btn" style="background: white; color: #4f46e5;">+ Upload</button>
+                        </div>
+                    </div>
+                    <div class="mockup-content">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;">
+                            <div style="background: #f1f5f9; aspect-ratio: 4/3; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                                <div style="font-size: 2rem;">📷</div>
+                                <div style="font-size: 0.7rem; color: #64748b;">Pier 5 - Cor</div>
+                                <div style="position: absolute; bottom: 0.25rem; right: 0.25rem; background: rgba(0,0,0,0.5); color: white; padding: 0.125rem 0.25rem; border-radius: 4px; font-size: 0.6rem;">08:30</div>
+                            </div>
+                            <div style="background: #f1f5f9; aspect-ratio: 4/3; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                                <div style="font-size: 2rem;">📷</div>
+                                <div style="font-size: 0.7rem; color: #64748b;">Pier 5 - Progress</div>
+                                <div style="position: absolute; bottom: 0.25rem; right: 0.25rem; background: rgba(0,0,0,0.5); color: white; padding: 0.125rem 0.25rem; border-radius: 4px; font-size: 0.6rem;">12:00</div>
+                            </div>
+                            <div style="background: #f1f5f9; aspect-ratio: 4/3; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                                <div style="font-size: 2rem;">📷</div>
+                                <div style="font-size: 0.7rem; color: #64748b;">Bekisting Pier 6</div>
+                                <div style="position: absolute; bottom: 0.25rem; right: 0.25rem; background: rgba(0,0,0,0.5); color: white; padding: 0.125rem 0.25rem; border-radius: 4px; font-size: 0.6rem;">14:00</div>
+                            </div>
+                            <div style="background: #f1f5f9; aspect-ratio: 4/3; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                                <div style="font-size: 2rem;">📷</div>
+                                <div style="font-size: 0.7rem; color: #64748b;">Overview Site</div>
+                                <div style="position: absolute; bottom: 0.25rem; right: 0.25rem; background: rgba(0,0,0,0.5); color: white; padding: 0.125rem 0.25rem; border-radius: 4px; font-size: 0.6rem;">16:00</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

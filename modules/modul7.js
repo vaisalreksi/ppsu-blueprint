@@ -79,6 +79,17 @@ const modul_prsu = {
                          <strong>DP:</strong> → Jurnal Bank → Uang Muka<br>
                          <strong>Pelunasan:</strong> → Jurnal Pendapatan Sewa<br>
                          <strong>Overdue:</strong> → Alert + reminder otomatis`
+            },
+            {
+                icon: '🤖',
+                iconBg: 'rgba(168, 85, 247, 0.1)',
+                iconColor: '#a855f7',
+                title: 'AI Solutions (Low Demand)',
+                content: `<strong>📊 Demand Forecast:</strong> Prediksi okupansi 30-90 hari<br>
+                         <strong>💲 Dynamic Pricing:</strong> Harga otomatis sesuai demand<br>
+                         <strong>🎯 AI Recommendations:</strong> Strategi marketing otomatis<br>
+                         <strong>🎁 Promo Generator:</strong> Early bird, last minute, bundle<br>
+                         <strong>📧 Auto Marketing:</strong> Email blast jika low demand`
             }
         ]
     },
@@ -390,6 +401,107 @@ style KEU fill:#fce7f3,stroke:#ec4899,color:#831843`
                         </div>
 
                         <button class="mockup-submit" style="width: 100%;">📤 Submit Booking Request</button>
+                    </div>
+                </div>
+
+                <!-- AI Demand Optimization -->
+                <div class="prototype-mockup" style="margin-top: 1.5rem;">
+                    <div class="mockup-header" style="background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);">
+                        <span class="mockup-title">🤖 AI Demand Optimization</span>
+                        <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">Auto-Insights</span>
+                    </div>
+                    <div class="mockup-content">
+                        <!-- Low Demand Alert -->
+                        <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border: 2px solid #f59e0b; padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span style="font-size: 1.5rem;">⚠️</span>
+                                <strong style="color: #92400e;">AI Alert: Low Demand Detected!</strong>
+                            </div>
+                            <div style="font-size: 0.85rem; color: #78350f;">
+                                Okupansi 30 hari ke depan diprediksi hanya <strong>35%</strong>. AI merekomendasikan aktivasi promo.
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Pricing Cards -->
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>💲</span> Dynamic Pricing Recommendations
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
+                                <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 0.7rem; color: #991b1b;">🔴 Very Low Period</div>
+                                    <div style="font-size: 0.65rem; color: #64748b;">Feb 1-15</div>
+                                    <div style="font-size: 1.25rem; font-weight: 700; color: #ef4444;">-40%</div>
+                                    <div style="font-size: 0.65rem;">Rp 30 jt/hari</div>
+                                </div>
+                                <div style="background: #fff7ed; border: 2px solid #f97316; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 0.7rem; color: #9a3412;">🟠 Low Period</div>
+                                    <div style="font-size: 0.65rem; color: #64748b;">Feb 16-28</div>
+                                    <div style="font-size: 1.25rem; font-weight: 700; color: #f97316;">-20%</div>
+                                    <div style="font-size: 0.65rem;">Rp 40 jt/hari</div>
+                                </div>
+                                <div style="background: #dcfce7; border: 2px solid #22c55e; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 0.7rem; color: #166534;">🟢 Peak Period</div>
+                                    <div style="font-size: 0.65rem; color: #64748b;">Mar 1-15</div>
+                                    <div style="font-size: 1.25rem; font-weight: 700; color: #22c55e;">+25%</div>
+                                    <div style="font-size: 0.65rem;">Rp 62.5 jt/hari</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Generated Promos -->
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>🎁</span> AI-Generated Promo Packages
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 0.75rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 0.85rem;">🌅 Early Bird Special</div>
+                                        <div style="font-size: 0.75rem; color: #64748b;">Book >30 hari = 20% off + Free Parking</div>
+                                    </div>
+                                    <button style="background: #3b82f6; color: white; border: none; padding: 0.375rem 0.75rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">Activate</button>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 0.75rem; border-radius: 8px; border-left: 4px solid #ef4444;">
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 0.85rem;">⚡ Last Minute Deal</div>
+                                        <div style="font-size: 0.75rem; color: #64748b;">Book <7 hari = 40% off (limited time)</div>
+                                    </div>
+                                    <button style="background: #ef4444; color: white; border: none; padding: 0.375rem 0.75rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">Activate</button>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 0.75rem; border-radius: 8px; border-left: 4px solid #22c55e;">
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 0.85rem;">📦 Bundle Package</div>
+                                        <div style="font-size: 0.75rem; color: #64748b;">Hall + Sound + Lighting = 25% off</div>
+                                    </div>
+                                    <button style="background: #22c55e; color: white; border: none; padding: 0.375rem 0.75rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">Activate</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Auto Marketing Actions -->
+                        <div style="background: #eff6ff; border: 1px solid #3b82f6; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>📧</span> Auto Marketing Actions
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; font-size: 0.8rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked> Email blast ke 245 past customers
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked> Push notification ke EO partners
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox"> Post ke social media (manual)
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked> Enable flash sale di website
+                                </div>
+                            </div>
+                            <button style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; margin-top: 1rem; width: 100%;">
+                                🚀 Execute AI Marketing Campaign
+                            </button>
+                        </div>
                     </div>
                 </div>
 

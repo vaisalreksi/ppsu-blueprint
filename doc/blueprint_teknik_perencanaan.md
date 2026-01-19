@@ -71,7 +71,69 @@ FR-TP-006: Sistem dapat mencatat tim proyek dan vendor
 FR-TP-007: Sistem dapat upload dokumen proyek (kontrak, gambar, spek)
 ```
 
-### 4.2 CCTV Monitoring Proyek
+**Lifecycle Proyek:**
+
+| Tahap | Deskripsi | Output |
+|-------|-----------|--------|
+| 1. Tender | Proses lelang/penunjukan langsung | Dokumen PBJ |
+| 2. Penawaran (RAB) | Rencana Anggaran Biaya | RAB Final |
+| 3. Pelaksanaan (RAP) | Rencana Anggaran Pelaksanaan | Progress % |
+| 4. Penagihan | Berita Acara & Invoice | AR Keuangan |
+
+**Contoh Data Proyek:**
+
+| Field | Contoh |
+|-------|--------|
+| Nama Proyek | Pembangunan Dermaga Balige |
+| Nilai Kontrak | Rp 45.000.000.000 |
+| RAB (Penawaran) | Rp 48.500.000.000 |
+| RAP (Pelaksanaan) | Rp 38.250.000.000 |
+| Est. Margin | 15% (Rp 6.75 M) |
+
+### 4.2 Manajemen PBJ Konstruksi (HPS & Tender)
+
+> [!IMPORTANT]
+> PBJ (Pengadaan Barang/Jasa) Konstruksi mengikuti regulasi LKPP dengan threshold sesuai kebijakan perusahaan
+
+```
+FR-TP-008: Sistem dapat menyusun HPS (Harga Perkiraan Sendiri)
+FR-TP-009: Sistem dapat menyusun spesifikasi teknis dan gambar
+FR-TP-010: Sistem dapat mengelola proses tender (Undangan, Aanwijzing, Evaluasi)
+FR-TP-011: Sistem dapat mencatat penunjukan langsung (PL) untuk nilai < threshold
+FR-TP-012: Sistem dapat menentukan pemenang dan generate kontrak
+FR-TP-013: Sistem menyimpan dokumen PBJ lengkap (audit trail)
+```
+
+**Threshold Pengadaan:**
+
+| Nilai Pekerjaan | Metode | Approval |
+|-----------------|--------|----------|
+| < Rp 50 juta | Penunjukan Langsung | Manajer Teknik |
+| Rp 50 jt - 200 jt | Pemilihan Langsung | Direktur |
+| > Rp 200 juta | Tender/Lelang | Direktur Utama |
+
+**Proses Tender:**
+
+| No | Tahapan | Durasi | Output |
+|----|---------|--------|--------|
+| 1 | Penyusunan HPS | 5 hari | Dokumen HPS |
+| 2 | Undangan Peserta | 3 hari | Daftar Peserta |
+| 3 | Aanwijzing | 1 hari | BA Aanwijzing |
+| 4 | Pemasukan Penawaran | 7 hari | Dokumen Penawaran |
+| 5 | Evaluasi | 5 hari | BA Evaluasi |
+| 6 | Penetapan Pemenang | 2 hari | SK Pemenang |
+| 7 | Penandatanganan Kontrak | 3 hari | Kontrak |
+
+**Contoh HPS:**
+
+| Item Pekerjaan | Volume | Satuan | Harga Satuan | Jumlah |
+|----------------|--------|--------|--------------|--------|
+| Pekerjaan Persiapan | 1 | Ls | 25.000.000 | 25.000.000 |
+| Galian Tanah | 500 | m³ | 75.000 | 37.500.000 |
+| Pondasi Bore Pile | 20 | titik | 15.000.000 | 300.000.000 |
+| **Total HPS** | | | | **362.500.000** |
+
+### 4.3 CCTV Monitoring Proyek
 
 > [!IMPORTANT]
 > CCTV terintegrasi untuk pengawasan remote proyek
@@ -114,7 +176,71 @@ FR-TP-027: Dashboard menampilkan status semua proyek (on-track, delayed, ahead)
 | 🟠 Oranye | At Risk | SPI 0.8 - 0.89 |
 | 🔴 Merah | Critical | SPI < 0.8 |
 
-### 4.4 Sistem Penagihan Proyek (Progress Billing)
+### 4.5 Log Konstruksi (Daily Log)
+
+> [!IMPORTANT]
+> Log Konstruksi adalah catatan sistematis, kronologis, dan terdokumentasi atas seluruh aktivitas operasional konstruksi
+
+```
+FR-TP-028: Sistem dapat mencatat aktivitas harian proyek
+FR-TP-029: Sistem dapat mencatat material in/out dan stock
+FR-TP-030: Sistem dapat mencatat jumlah tenaga kerja per skill
+FR-TP-031: Sistem dapat mencatat progress fisik dengan foto
+FR-TP-032: Sistem dapat mencatat checklist K3 dan insiden
+FR-TP-033: Sistem dapat mencatat identifikasi risiko dan link ke Modul Risiko
+FR-TP-034: Sistem generate daily report otomatis
+```
+
+**Komponen Log Konstruksi:**
+
+| Komponen | Detail | Frekuensi |
+|----------|--------|----------|
+| 📅 **Aktivitas Harian** | Jenis pekerjaan, lokasi, cuaca | Harian |
+| 📦 **Material** | In, Out, Stock, Pemakaian | Harian |
+| 👷 **Tenaga Kerja** | Jumlah per skill, attendance | Harian |
+| 🏗️ **Progress Fisik** | % progress, foto dokumentasi | Harian |
+| ⚠️ **K3** | Safety checklist, insiden, APD | Harian |
+| 🚨 **Risiko** | Identifikasi, mitigasi, link Modul 9 | Saat terjadi |
+
+**Contoh Daily Log:**
+
+| Waktu | Aktivitas |
+|-------|----------|
+| 07:00 | Safety briefing, distribusi APD |
+| 08:00 | Pengecoran kolom K-1 (Vol: 5m³) |
+| 10:00 | Material masuk: Besi Ø12 (500 batang) |
+| 12:00 | Progress fisik: 45% → 47% |
+| 14:00 | Kendala: Hujan deras 1 jam |
+| 16:00 | Inspeksi K3: OK, 0 insiden |
+
+**Material Tracking:**
+
+| Material | Stock Awal | Masuk | Keluar | Stock Akhir |
+|----------|------------|-------|--------|-------------|
+| Semen 50kg | 500 sak | 200 | 150 | 550 sak |
+| Besi Ø12 | 1000 btg | 500 | 300 | 1200 btg |
+| Batu Split | 50 m³ | 20 | 15 | 55 m³ |
+
+**Tenaga Kerja:**
+
+| Skill | Jumlah | Hadir | Status |
+|-------|--------|-------|--------|
+| Mandor | 2 | 2 | ✅ |
+| Tukang Besi | 10 | 9 | ⚠️ 1 izin |
+| Tukang Cor | 8 | 8 | ✅ |
+| Helper | 15 | 14 | ⚠️ 1 sakit |
+
+**K3 Checklist:**
+
+| Item | Status |
+|------|--------|
+| APD Lengkap | ✅ OK |
+| Safety Briefing | ✅ Dilakukan |
+| Rambu Peringatan | ✅ Terpasang |
+| Insiden Hari Ini | 0 |
+| Near Miss | 1 (Hampir tertimpa material) |
+
+### 4.6 Sistem Penagihan Proyek (Progress Billing)
 
 > [!IMPORTANT]
 > Penagihan berdasarkan progress aktual dan milestone
@@ -357,12 +483,17 @@ Sistem Teknik dan Perencanaan akan:
 > - **Mengintegrasikan** invoice langsung ke Keuangan (AR)
 
 Fitur unggulan:
+- 💼 **Project Lifecycle** - Tender → RAB → RAP → Penagihan
+- 📦 **PBJ Konstruksi** - HPS, Tender, Penunjukan Langsung
+- 📓 **Log Konstruksi** - Daily log lengkap (Material, TK, K3, Risiko)
 - 📹 **CCTV Live** - Pantau proyek dari kantor
 - 📈 **S-Curve Dashboard** - Visualisasi actual vs plan
 - 💰 **Progress Billing** - Tagihan berdasar progress
 - 🔗 **AR Integration** - Sync otomatis ke Keuangan
+- ⚠️ **K3 Tracking** - Safety checklist dan insiden
 
 ---
 
 *Dokumen ini disusun sebagai bagian dari analisis sistem PT PPSU Perseroda*
-*Versi: 1.0 | Tanggal: 18 Januari 2026*
+*Versi: 2.0 | Tanggal: 19 Januari 2026*
+*Update: Penambahan PBJ Konstruksi dan Log Konstruksi*

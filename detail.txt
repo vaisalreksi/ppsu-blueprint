@@ -1,0 +1,251 @@
+============================================
+DETAIL DOKUMENTASI SISTEM ERP PT PPSU
+============================================
+
+LOKASI PROJECT: /ppsu
+DOKUMEN INI BERISI PENJELASAN MENDALAM MENGENAI MODUL, DIAGRAM ALUR, DAN PROTOTYPE UI.
+
+--------------------------------------------------------------------------------
+[MODUL 0] DASHBOARD TOP MANAGEMENT (EXECUTIVE)
+--------------------------------------------------------------------------------
+1. DESKRIPSI & TUJUAN
+   Master Dashboard yang dirancang khusus untuk Direksi dan Dewan Komisaris. Bertujuan
+   sebagai "Single Source of Truth" yang mengkonsolidasi KPI dari seluruh 9 modul
+   operasional secara real-time. Memiliki kemampuan drill-down untuk analisis mendalam.
+
+2. FITUR UTAMA
+   - Consolidated KPIs: Menampilkan metric kunci dari Keuangan, Ops, HC, dan Risiko dalam satu layar.
+   - Real-time Financials: Posisi Revenue, Net Profit, Cashflow, dan AR Aging terkini.
+   - Saldo Bank & Giro: Monitoring saldo real-time per rekening bank (Mandiri, BNI, BRI, dll).
+   - Budget Early Warning: Indikator peringatan jika realisasi anggaran mencapai 80%, 90%, atau 100%.
+   - Approval Center: Pusat otorisasi terpusat. Direksi dapat approve/reject pengajuan dari modul lain (misal: PO > 100jt, Termin Proyek) langsung dari dashboard ini.
+   - Risk & Audit Overview: Heatmap risiko utama dan status temuan audit (CACM).
+
+3. PENJELASAN DIAGRAM ALUR (Flowchart)
+   - Input: Data ditarik real-time dari Modul 3 (Keuangan), Modul 6-8 (Ops), Modul 5 (HC), Modul 9 (Risiko).
+   - Processing: Sistem mengagregasi data, menghitung KPI vs Target, dan mengecek thresholds untuk alerts.
+   - Output: Visualisasi dalam bentuk Scorecards, Charts, dan Alert Notifications.
+   - Action: Direksi melakukan "Drill-down" untuk melihat detail atau melakukan "Approval" pada pending items.
+
+4. DETAIL PROTOTYPE UI (Per Section)
+   - Header Section: Menampilkan greeting, notifikasi alert (lonceng), dan last update timestamp.
+   - Top Cards (KPI Keuangan): 
+     * Revenue YTD (vs Last Year)
+     * Net Profit Margin (vs Target)
+     * Cashflow Position (Status: Healthy/Warning)
+     * Budget Realization (% Actual vs Budget)
+   - Middle Section (Split View):
+     * Kiri: Grafik Revenue Breakdown per Unit Bisnis (Transport, PRSU, Proyek).
+     * Kanan: Critical Alerts Panel (Daftar risiko extreme, approval overdue, temuan critical).
+   - Bottom Section (Operational & Risk):
+     * Operational Stats: Penumpang harian, Okupansi venue, Proyek on-track.
+     * Risk Heatmap Mini: Matrix 5x5 yang menyoroti jumlah risiko di area merah/kuning.
+   - Quick Access: Tombol pintas untuk masuk ke modul-modul spesifik.
+
+--------------------------------------------------------------------------------
+[MODUL 2] SISTEM KESEKRETARIATAN
+--------------------------------------------------------------------------------
+1. DESKRIPSI & TUJUAN
+   Sistem untuk digitalisasi administrasi perkantoran. Menggantikan proses manual surat-menyurat
+   dan disposisi fisik. Bertujuan mempercepat distribusi informasi dan mengamankan dokumen legal.
+
+2. FITUR UTAMA
+   - Surat Masuk & Keluar Digital: Registrasi surat dengan barcode/QR, scan upload, dan penomoran otomatis (format standar perusahaan).
+   - Disposisi Elektronik: Flow disposisi dari Direksi ke bawahan secara berjenjang dengan tracking status (Dibaca/Ditindaklanjuti).
+   - Manajemen Rapat (New):
+     * Booking Ruangan: Cek ketersediaan dan booking.
+     * Undangan & RSVP: Kirim undangan email/WA dan tracking kehadiran.
+     * Notulen & Action Items: Catat hasil rapat dan assign tugas ke PIC dengan deadline.
+   - Arsip Digital: Penyimpanan dokumen terstruktur dengan OCR (pencarian isi dokumen).
+   - Manajemen Kontrak: Database kontrak dengan alert notifikasi H-30 sebelum expired.
+
+3. PENJELASAN DIAGRAM ALUR
+   - Surat Masuk: Surat diterima -> Scan & Input -> Disposisi Direksi -> Distribusi ke Unit -> Tindak Lanjut -> Arsip.
+   - Surat Keluar: Draft -> Review Berjenjang -> Approval TTD -> Penomoran -> Kirim Log.
+   - Rapat: Jadwal -> Booking -> Undangan -> Pelaksanaan -> Notulen -> Tracking Action Items.
+
+4. DETAIL PROTOTYPE UI
+   - Dashboard Sekretariat: Counter surat masuk hari ini, disposisi pending, dan agenda rapat hari ini.
+   - Inbox Disposisi: Tampilan mirip email untuk Direksi melihat surat masuk dan memberikan instruksi disposisi (dropdown instruksi + text note).
+   - Kalender Rapat: Tampilan kalender bulanan dengan kode warna per ruangan/jenis rapat.
+   - Form Surat Masuk: Input field untuk No Surat Asal, Pengirim, Perihal, Sifat (Penting/Rahasia), dan upload PDF.
+
+--------------------------------------------------------------------------------
+[MODUL 3] SISTEM KEUANGAN ACCT
+--------------------------------------------------------------------------------
+1. DESKRIPSI & TUJUAN
+   Backbone sistem ERP untuk pencatatan akuntansi dan pelaporan keuangan sesuai PSAK.
+   Terintegrasi otomatis dengan modul operasional untuk mengurangi jurnal manual.
+
+2. FITUR UTAMA
+   - General Ledger (GL): Chart of Accounts (CoA) standar, jurnal otomatis dari transaksi modul lain.
+   - Audit Trail & Voucher System: Setiap transaksi memiliki "Voucher ID" unik dan log perubahan (who, when, what) untuk audit.
+   - Financial Reports: Neraca, Laba Rugi, Arus Kas (Direct/Indirect) yang digenerate real-time.
+   - Budget Control: Locking system jika pengajuan biaya melebihi sisa anggaran (RKA).
+   - Fixed Asset Management: Perhitungan penyusutan otomatis (Garis Lurus/Double Declining).
+
+3. PENJELASAN DIAGRAM ALUR
+   - Transaksi: Unit bisnis input transaksi (Invoice/Biaya) -> Verifikasi Dokumen -> Approval Berjenjang -> Posting Jurnal.
+   - Closing: Rekonsiliasi Bank -> Adjusting Entries -> Perhitungan Penyusutan & Amortisasi -> Generate Laporan Keuangan -> Tutup Buku.
+
+4. DETAIL PROTOTYPE UI
+   - Financial Dashboard: Grafik trend pendapatan vs biaya bulanan, rasio likuiditas.
+   - Jurnal Entry Form: Input Debit/Kredit dengan validasi balance otomatis.
+   - Budget Monitoring View: Tabel perbandingan Budget vs Actual per departemen dengan indikator warna (Hijau/Kuning/Merah).
+   - Approval Queue: Daftar voucher yang menunggu persetujuan Manajer Keuangan/Direktur.
+
+--------------------------------------------------------------------------------
+[MODUL 4] SISTEM BAGIAN UMUM
+--------------------------------------------------------------------------------
+1. DESKRIPSI & TUJUAN
+   Pengelolaan aset fisik, inventori barang habis pakai, dan siklus pengadaan (Procurement).
+
+2. FITUR UTAMA
+   - Manajemen Aset: Tracking lokasi aset dengan QR Code, status kondisi (Baik/Rusak), dan nilai buku.
+   - Procurement Cycle: Purchase Request (PR) -> Request for Quotation (RFQ) -> Purchase Order (PO) -> Goods Receipt (GR).
+   - Inventory Management: Stock opname digital, reorder point alerts untuk ATK/Sparepart.
+   - Vendor Management: Database vendor dengan scoring kinerja (Ketepatan waktu, Kualitas).
+
+3. PENJELASAN DIAGRAM ALUR
+   - Pengadaan: User Request (PR) -> Cek Budget -> Approval -> PO ke Vendor -> Barang Datang (GR) -> QC -> Masuk Stok/Aset.
+   - Aset: Pengadaan Baru -> Registrasi QR -> Penempatan -> Mutasi/Peminjaman -> Maintenance -> Penghapusan (Disposal).
+
+4. DETAIL PROTOTYPE UI
+   - Asset Dashboard: Total nilai aset, aset perlu maintenance, stock alert.
+   - Daftar Aset: Tabel aset dengan foto thumbnail, status kondisi, dan tombol "Mutasi".
+   - Form PR: Form pengajuan pembelian barang dengan otomatis cek sisa budget.
+   - Vendor Scorecard: Profil vendor menampilkan rating bintang berdasarkan riwayat transaksi.
+
+--------------------------------------------------------------------------------
+[MODUL 5] HUMAN CAPITAL (HC)
+--------------------------------------------------------------------------------
+1. DESKRIPSI & TUJUAN
+   Manajemen siklus hidup karyawan (Hire to Retire). Fokus pada administrasi yang rapi
+   dan pengembangan talenta.
+
+2. FITUR UTAMA
+   - Data Induk Pegawai: Database lengkap termasuk riwayat karir, keluarga, pendidikan.
+   - Manajemen Kontrak: Monitoring PKWT/PKWTT dengan alert masa berakhir kontrak.
+   - Payroll & PPh21: Hitung gaji, lembur, bonus, dan pajak PPh21 (Gross/Nett/Gross-up) otomatis.
+   - Presensi & Cuti: Integrasi mesin finger/face ID, pengajuan cuti berjenjang via mobile.
+   - Merit System & KPI: Penilaian kinerja, tracking pelatihan, dan reward/punishment (SP).
+
+3. PENJELASAN DIAGRAM ALUR
+   - Payroll: Tarik Data Absensi -> Hitung Komponen Gaji -> Hitung Pajak & BPJS -> Generate Slip -> Approval -> Bank Transfer -> Jurnal Keuangan.
+   - Rekrutmen: Permintaan SDM -> Iklan Lowongan -> Seleksi -> Offering -> Onboarding -> Kontrak.
+
+4. DETAIL PROTOTYPE UI
+   - HC Dashboard: Headcount statistik, attendance rate hari ini, turnover rate, karyawan ulang tahun.
+   - Form Cuti: Kalender pilih tanggal cuti, sisa kuota cuti, dan approval atasan.
+   - Slip Gaji Digital: Tampilan rincian pendapatan dan potongan yang bisa diunduh PDF (password protected).
+   - KPI Scorecard: Form penilaian kinerja semesteran dengan target vs realisasi.
+
+--------------------------------------------------------------------------------
+[MODUL 6] OPERASIONAL TRANSPORTASI (FERRY)
+--------------------------------------------------------------------------------
+1. DESKRIPSI & TUJUAN
+   Sistem operasi inti untuk bisnis penyeberangan Danau Toba. Menggantikan sistem manual
+   dan menghilangkan kebocoran pendapatan tiket.
+
+2. FITUR UTAMA
+   - E-Ticketing: Penjualan tiket via Web, Mobile App, dan POS di loket pelabuhan.
+   - Manifest Digital: Pencatatan identitas penumpang sesuai regulasi Kemenhub.
+   - GPS Tracking & CCTV: Monitoring posisi kapal real-time (Public View) dan feed CCTV kapal.
+   - Manajemen BBM & Maintenance: Log pengisian BBM, hitung rasio konsumsi, jadwal docking kapal.
+   - Log Operasional (Log Book): Catatan digital Nakhoda (Cuaca, Kejadian, Rute).
+
+3. PENJELASAN DIAGRAM ALUR
+   - Ticketing: Pilih Jadwal -> Pilih Golongan -> Bayar (QRIS/Cash) -> Cetak Tiket/QR -> Scan Boarding -> Manifest.
+   - Operasional: Pre-departure Check -> Boarding -> Sailing (GPS Track) -> Docking -> Log Book Entry.
+
+4. DETAIL PROTOTYPE UI
+   - Ops Dashboard: Peta tracking kapal real-time, grafik penjualan tiket hari ini, sisa kapasitas kapal.
+   - POS Tiket: Interface kasir layar sentuh untuk penjualan tiket cepat di loket.
+   - Public Display: Tampilan jadwal keberangkatan dan posisi kapal untuk layar di ruang tunggu.
+   - Maintenance Log: Form checklist harian mesin kapal (Oli, BBM, Aki).
+
+--------------------------------------------------------------------------------
+[MODUL 7] OPERASIONAL PRSU (PROPERTY)
+--------------------------------------------------------------------------------
+1. DESKRIPSI & TUJUAN
+   Manajemen aset properti Pekan Raya Sumatera Utara. Fokus pada optimalisasi okupansi
+   dan kemudahan booking venue.
+
+2. FITUR UTAMA
+   - Venue Booking System: Kalender ketersediaan venue visual (Warna-warni).
+   - Event Management: Manajemen event pameran/konser, layout booth, ticketing gate.
+   - Tenant Management: Database penyewa, kontrak sewa, tagihan utility (listrik/air).
+   - Approval Berjenjang: Workflow persetujuan diskon atau event besar.
+   - Dynamic Pricing (AI): Rekomendasi harga sewa berdasarkan demand/musim.
+
+3. PENJELASAN DIAGRAM ALUR
+   - Booking: Cek Tanggal -> Booking Request -> Perhitungan Biaya -> Approval -> Invoice DP -> Pelaksanaan -> Pelunasan.
+   - Tenant: Registrasi -> Kontrak -> Penempatan -> Tagihan Bulanan -> Pembayaran -> Perpanjangan.
+
+4. DETAIL PROTOTYPE UI
+   - Venue Calendar: Grid kalender dengan blok warna status (Hijau=Available, Merah=Booked, Kuning=Pending).
+   - Master Plan Map: Peta area PRSU yang interaktif, klik blok untuk lihat detail penyewa.
+   - Form Booking: Input detail event, pilih fasilitas tambahan (Sound, Genset, Kursi).
+   - Tenant Billing: Daftar tagihan tenant yang belum lunas dengan status aging.
+
+--------------------------------------------------------------------------------
+[MODUL 8] TEKNIK & PERENCANAAN
+--------------------------------------------------------------------------------
+1. DESKRIPSI & TUJUAN
+   Manajemen proyek konstruksi fisik dan perawatan infrastruktur. Monitoring ketat
+   anggaran (RAB) dan progres fisik (Kurva S).
+
+2. FITUR UTAMA
+   - Project Cost Control: RAB (Rencana) vs RAP (Pelaksanaan) vs Realisasi.
+   - Progress Monitoring: Input progres mingguan, generate Kurva S otomatis (Plan vs Actual).
+   - PBJ Konstruksi: Manajemen tender, HPS, evaluasi kontraktor, SPK.
+   - Log Konstruksi: Laporan harian lapangan (Cuaca, Material Masuk, Tenaga Kerja, Kendala).
+
+3. PENJELASAN DIAGRAM ALUR
+   - Siklus Proyek: Perencanaan (RAB) -> Tender -> SPK -> Pelaksanaan (Log Harian) -> Progress Opname -> Termin Pembayaran -> Serah Terima (BST).
+
+4. DETAIL PROTOTYPE UI
+   - Project Dashboard: Daftar proyek aktif dengan status bar progress, indikator deviasi waktu/biaya.
+   - Kurva S View: Grafik garis "Rencana" vs "Realisasi" yang tumpang tindih untuk melihat deviasi.
+   - RAP Editor: Tabel detail item pekerjaan, volume, dan harga satuan untuk menyusun anggaran pelaksanaan.
+
+--------------------------------------------------------------------------------
+[MODUL 9] MANAJEMEN RISIKO
+--------------------------------------------------------------------------------
+1. DESKRIPSI & TUJUAN
+   Penerapan GCG melalui identifikasi dan monitoring risiko secara sistematis.
+
+2. FITUR UTAMA
+   - Risk Register: Pencatatan risiko, penyebab, dampak, dan pemilik risiko (Risk Owner).
+   - Risk Assessment Matrix: Penilaian skor risiko (5x5) berdasarkan Probabilitas x Dampak.
+   - KRI (Key Risk Indicators): Monitoring indikator risiko otomatis yang terintegrasi modul lain (misal: Cashflow turun = Risiko Likuiditas naik).
+   - Mitigation Plan: Rencana penanganan risiko (Avoid, Reduce, Share, Accept) dan tracking progressnya.
+
+3. PENJELASAN DIAGRAM ALUR
+   - Risk Management Process: Identifikasi -> Analisis (Scoring) -> Evaluasi -> Penanganan (Mitigasi) -> Monitoring & Review.
+
+4. DETAIL PROTOTYPE UI
+   - Heatmap Dashboard: Matriks warna-warni 5x5 yang menunjukkan sebaran jumlah risiko. Klik kotak "Merah" (Extreme) untuk lihat detail.
+   - Risk Register Table: Daftar risiko dengan kolom skor Inherent Risk (Sebelum mitigasi) dan Residual Risk (Setelah mitigasi).
+   - KRI Dashboard: Panel indikator jarum speedometer untuk metric-metric kritis.
+
+--------------------------------------------------------------------------------
+[MODUL 10] CACM (CONTINUOUS AUDIT)
+--------------------------------------------------------------------------------
+1. DESKRIPSI & TUJUAN
+   Sistem audit internal berbasis IT untuk mendeteksi anomali (fraud/error) secara dini
+   dan otomatis.
+
+2. FITUR UTAMA
+   - Automated Audit Rules: Script otomatis untuk cek anomali (misal: Transaksi di hari libur, PO duplikat, Transaksi split).
+   - Exception Management: Daftar "Red Flags" yang terdeteksi untuk ditindaklanjuti auditor.
+   - Audit Finding Tracking: Manajemen temuan audit, rekomendasi, dan status perbaikan management.
+   - RKPT Digital: Rencana Kerja Pengawasan Tahunan berbasis risiko.
+
+3. PENJELASAN DIAGRAM ALUR
+   - Continuous Audit: Data Transaksi -> Rule Engine -> Anomali Terdeteksi -> Exception Report -> Verifikasi Auditor -> Temuan/False Positive.
+
+4. DETAIL PROTOTYPE UI
+   - Anomaly Dashboard: Counter jumlah anomali per kategori (Keuangan, Ops, HC).
+   - Finding Tracker: Kanban board (Open, In Progress, Closed) untuk status tindak lanjut temuan.
+   - Rule Configurator: Interface untuk mengaktifkan/menonaktifkan parameter aturan audit otomatis.

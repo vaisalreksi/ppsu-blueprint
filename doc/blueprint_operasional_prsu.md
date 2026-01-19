@@ -161,6 +161,103 @@ FR-PRSU-054: Sistem dapat generate laporan AR aging
 FR-PRSU-055: Sistem mengirim reminder pembayaran otomatis
 ```
 
+### 4.7 AI-Powered Demand Optimization
+
+> [!IMPORTANT]
+> Solusi AI untuk mengoptimalkan okupansi venue ketika PRSU tidak diminati
+
+```
+FR-PRSU-060: AI menganalisis trend booking historis
+FR-PRSU-061: AI memprediksi demand per venue/periode
+FR-PRSU-062: AI merekomendasikan dynamic pricing
+FR-PRSU-063: AI mengidentifikasi periode low-demand
+FR-PRSU-064: AI merekomendasikan strategi marketing
+FR-PRSU-065: Sistem dapat generate promo otomatis
+FR-PRSU-066: AI merekomendasikan jenis event yang sesuai musim
+FR-PRSU-067: Dashboard menampilkan AI insights & recommendations
+```
+
+**4.7.1 Demand Forecasting (Prediksi Permintaan)**
+
+| Fitur | Deskripsi | Data Source |
+|-------|-----------|-------------|
+| Seasonal Pattern | Identifikasi pola musiman (libur, weekend) | 2+ tahun booking data |
+| Event Trend | Tren jenis event yang populer | Historical bookings |
+| Lead Time Analysis | Jarak booking - event date | Booking timestamps |
+| Churn Prediction | Customer yang unlikely repeat | Customer behavior |
+
+**4.7.2 Dynamic Pricing Engine**
+
+| Kondisi Demand | Strategi AI | Contoh Adjustment |
+|----------------|-------------|-------------------|
+| 🔴 Very Low (<20% occupancy forecast) | Aggressive Discount | -30% to -50% |
+| 🟠 Low (20-40% occupancy forecast) | Moderate Discount | -15% to -25% |
+| 🟡 Normal (40-70% occupancy forecast) | Standard Price | 0% |
+| 🟢 High (70-90% occupancy forecast) | Premium Price | +10% to +20% |
+| 🔵 Peak (>90% occupancy forecast) | Peak Premium | +25% to +40% |
+
+**Fee Breakdown Dynamic:**
+```
+Standard Rate: Rp 50.000.000/hari (Hall Utama)
+
+Low Season (-30%):
+  - Hall Utama: Rp 35.000.000/hari
+  - Bonus: Free sound system (worth Rp 5.000.000)
+
+Peak Season (+25%):
+  - Hall Utama: Rp 62.500.000/hari
+  - Minimum booking: 2 hari
+```
+
+**4.7.3 AI-Powered Recommendations**
+
+| Kondisi | AI Recommendation | Action |
+|---------|------------------|--------|
+| Low demand period detected | Suggest promo campaign | Auto-generate promo |
+| No booking 14+ days ahead | Early bird discount | Push notification |
+| Similar events trending | Suggest event to organizers | Email marketing |
+| Repeat customer inactive | Win-back offer | Personalized promo |
+| Competitor has similar event | Competitive pricing | Price adjustment |
+
+**4.7.4 Automated Marketing Triggers**
+
+```
+IF occupancy_forecast(next_30_days) < 40%:
+    → Generate promo package
+    → Send email blast to past customers  
+    → Post social media ads
+    → Enable "flash sale" pricing
+
+IF venue_idle_days >= 14:
+    → Send targeted offers to event organizers
+    → Suggest collaboration dengan EO partners
+    → Recommend untuk event internal/CSR
+
+IF high_margin_event_trend detected:
+    → Prioritize marketing untuk jenis event tersebut
+    → Create custom package
+```
+
+**4.7.5 AI Insights Dashboard**
+
+| Metric | Visualization | Update |
+|--------|---------------|--------|
+| Demand Forecast | Line chart 30-90 hari | Daily |
+| Low Demand Alert | Calendar heatmap | Real-time |
+| Price Recommendation | Dynamic pricing card | Daily |
+| Marketing ROI | Campaign performance | Weekly |
+| Customer Segments | Pie chart | Monthly |
+
+**4.7.6 Promo Package Generator (AI-Assisted)**
+
+| Package Type | Trigger | Contents |
+|--------------|---------|----------|
+| Early Bird | >30 hari sebelum event | 20% off + free parking |
+| Last Minute | <7 hari sebelum, kosong | 40% off + negotiable |
+| Bundle Package | 2+ venue booking | 25% off total |
+| Loyalty Reward | Customer 3+ events/year | 15% off + priority booking |
+| Off-Peak Special | Weekday + low season | 35% off + free facilities |
+
 ---
 
 ## 5. Integrasi Real-time dengan Keuangan
