@@ -100,7 +100,9 @@ const modul_keuangan = {
     // ============================================
     diagram: {
         title: 'Diagram Alur - Sistem Keuangan',
-        mermaid: `flowchart TB
+        mermaid: `flowchart LR
+
+%% ===================== GENERAL LEDGER =====================
 subgraph GL["📒 GENERAL LEDGER"]
     direction TB
     G1[Transaksi] --> G2[Jurnal<br>Umum]
@@ -110,6 +112,7 @@ subgraph GL["📒 GENERAL LEDGER"]
     G5 --> G6[Closing]
 end
 
+%% ===================== BUDGET CONTROL =====================
 subgraph BUDGET["💹 BUDGET CONTROL"]
     direction TB
     B1[📊 RKA<br>Tahunan] --> B2[Alokasi<br>per Unit]
@@ -120,6 +123,7 @@ subgraph BUDGET["💹 BUDGET CONTROL"]
     B4 -->|< 80%| B7[✅ OK]
 end
 
+%% ===================== AP / AR =====================
 subgraph APAR["💳 AP / AR MONITORING"]
     direction TB
     A1[AP Invoice] --> A2[Aging<br>30/60/90]
@@ -128,6 +132,7 @@ subgraph APAR["💳 AP / AR MONITORING"]
     A5 --> A6[Reminder<br>Penagihan]
 end
 
+%% ===================== KAS & BANK =====================
 subgraph KASBANK["🏦 KAS & BANK"]
     direction TB
     K1[Transaksi<br>Kas/Bank] --> K2[Rekonsiliasi]
@@ -135,6 +140,7 @@ subgraph KASBANK["🏦 KAS & BANK"]
     K3 --> K4[Dashboard<br>Kas Harian]
 end
 
+%% ===================== ASET =====================
 subgraph ASET["🏢 ASET & PENYUSUTAN"]
     direction TB
     S1[📋 Kartu<br>Aset] --> S2[Hitung<br>Penyusutan]
@@ -144,6 +150,7 @@ subgraph ASET["🏢 ASET & PENYUSUTAN"]
     S4 --> S5
 end
 
+%% ===================== AUDIT =====================
 subgraph AUDIT["📝 AUDIT TRAIL"]
     direction TB
     U1[Generate<br>Voucher] --> U2[Maker<br>Input]
@@ -152,6 +159,7 @@ subgraph AUDIT["📝 AUDIT TRAIL"]
     U4 --> U5[🔒 Posted<br>Immutable]
 end
 
+%% ===================== REPORT =====================
 subgraph REPORT["📊 LAPORAN KEUANGAN"]
     direction TB
     R1[Neraca]
@@ -160,17 +168,24 @@ subgraph REPORT["📊 LAPORAN KEUANGAN"]
     R4[P&L per<br>Unit Bisnis]
 end
 
+%% ===================== NODE TAMBAHAN =====================
+CACM[(🔍 MODUL<br>CACM)]
+
+%% ===================== FLOW ANTAR MODUL =====================
 G2 --> U1
-A3 --> K1
-A6 --> K1
 S5 --> G2
 K1 --> G2
+A3 --> K1
+A6 --> K1
+
 G6 --> R1
 G6 --> R2
 G6 --> R3
 B3 --> R4
-U5 --> CACM[(🔍 MODUL<br>CACM)]
 
+U5 --> CACM
+
+%% ===================== STYLING =====================
 style GL fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
 style BUDGET fill:#dcfce7,stroke:#22c55e,color:#166534
 style APAR fill:#fef3c7,stroke:#f59e0b,color:#78350f

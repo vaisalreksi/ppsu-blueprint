@@ -107,7 +107,9 @@ const modul_risiko = {
     // ============================================
     diagram: {
         title: 'Diagram Alur - Sistem Manajemen Risiko',
-        mermaid: `flowchart TB
+        mermaid: `flowchart LR
+
+%% ===================== RISK REGISTER =====================
 subgraph REGISTER["📋 RISK REGISTER"]
     direction TB
     R1[Input<br>Risiko] --> R2[Kategorisasi<br>Risiko]
@@ -115,30 +117,35 @@ subgraph REGISTER["📋 RISK REGISTER"]
     R3 --> R4[📋 Risk<br>Register]
 end
 
+%% ===================== RISK ASSESSMENT =====================
 subgraph ASSESS["📊 RISK ASSESSMENT"]
     direction TB
     A1[Nilai<br>Likelihood] --> A3[Calculate<br>L × I]
     A2[Nilai<br>Impact] --> A3
     A3 --> A4[Inherent<br>Risk Score]
     A4 --> A5{Risk Level?}
-    A5 -->|1-4| A6[🟢 Low]
-    A5 -->|5-9| A7[🟡 Medium]
-    A5 -->|10-15| A8[🟠 High]
-    A5 -->|16-25| A9[🔴 Extreme]
+
+    A5 -->|1–4| A6[🟢 Low]
+    A5 -->|5–9| A7[🟡 Medium]
+    A5 -->|10–15| A8[🟠 High]
+    A5 -->|16–25| A9[🔴 Extreme]
+
     A8 --> A10[Plan<br>Mitigasi]
     A9 --> A10
     A10 --> A11[Residual<br>Risk Score]
 end
 
+%% ===================== RISK RESPONSE =====================
 subgraph RESPOND["🛡️ PENANGANAN (4T)"]
     direction TB
     T1{Strategi?}
     T1 -->|Terminate| T2[🚫 Hindari<br>Aktivitas]
     T1 -->|Treat| T3[📉 Kurangi<br>L atau I]
-    T1 -->|Transfer| T4[🔄 Asuransi<br>Outsource]
+    T1 -->|Transfer| T4[🔄 Asuransi<br>/ Outsource]
     T1 -->|Tolerate| T5[✅ Terima<br>& Monitor]
 end
 
+%% ===================== MONITORING =====================
 subgraph MONITOR["📈 MONITORING PENGELOLAAN"]
     direction TB
     M1[🔄 Progress<br>Mitigasi] --> M2{Status?}
@@ -146,12 +153,14 @@ subgraph MONITOR["📈 MONITORING PENGELOLAAN"]
     M2 -->|Ongoing| M4[🟡 Track<br>Progress]
     M2 -->|Overdue| M5[⚠️ Escalate]
     M5 --> M4
+
     M4 --> M6[KRI<br>Monitoring]
     M6 --> M7{Breach<br>Threshold?}
     M7 -->|Ya| M8[🔔 Alert]
     M7 -->|Tidak| M9[Continue]
 end
 
+%% ===================== ARSIP DIGITAL =====================
 subgraph ARSIP["📁 ARSIP DIGITAL"]
     direction TB
     D1[📄 Dokumen] --> D4[Repository<br>Terpusat]
@@ -161,6 +170,7 @@ subgraph ARSIP["📁 ARSIP DIGITAL"]
     D4 --> D6[📥 Export]
 end
 
+%% ===================== RELASI ANTAR MODUL =====================
 R4 --> A1
 R4 --> A2
 A11 --> T1
@@ -169,6 +179,7 @@ T5 --> M6
 M3 --> D3
 A4 --> D1
 
+%% ===================== STYLING =====================
 style REGISTER fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
 style ASSESS fill:#dcfce7,stroke:#22c55e,color:#166534
 style RESPOND fill:#f3e8ff,stroke:#a855f7,color:#581c87

@@ -120,7 +120,9 @@ const modul_cacm = {
     // ============================================
     diagram: {
         title: 'Diagram Alur - Sistem CACM',
-        mermaid: `flowchart TB
+        mermaid: `flowchart LR
+
+%% ===================== AUDIT UNIVERSE & RKPT =====================
 subgraph RKPT["📅 AUDIT UNIVERSE & RKPT"]
     direction TB
     U1[🌐 Audit<br>Universe] --> U2[Risk<br>Assessment]
@@ -129,6 +131,7 @@ subgraph RKPT["📅 AUDIT UNIVERSE & RKPT"]
     U4 --> U5[Timeline<br>per Quarter]
 end
 
+%% ===================== AUDIT EXECUTION =====================
 subgraph PLAN["📋 AUDIT EXECUTION"]
     direction TB
     P1[Audit<br>Plan] --> P2[🎲 Sampling<br>Transaksi]
@@ -136,18 +139,22 @@ subgraph PLAN["📋 AUDIT EXECUTION"]
     P3 --> P4[📁 Upload<br>Evidence]
 end
 
+%% ===================== AUTOMATED RULES =====================
 subgraph RULES["⚙️ AUTOMATED RULES & RED FLAG"]
     direction TB
     R1[Define<br>Audit Rules] --> R2[Schedule<br>Execution]
     R2 --> R3[Execute vs<br>Data Source]
     R3 --> R4{Exception<br>Found?}
+
     R4 -->|Ya| R5[🚩 Red Flag<br>Otomatis]
     R4 -->|Tidak| R6[Log &<br>Continue]
+
     R5 --> R7{Severity?}
-    R7 -->|Critical/High| R8[🚨 Alert<br>Immediate]
-    R7 -->|Medium/Low| R9[📋 Queue<br>Review]
+    R7 -->|Critical / High| R8[🚨 Alert<br>Immediate]
+    R7 -->|Medium / Low| R9[📋 Queue<br>Review]
 end
 
+%% ===================== DASHBOARD TEMUAN =====================
 subgraph FINDING["📊 DASHBOARD TEMUAN"]
     direction TB
     F1[🔴 Open<br>Finding] --> F2[Assign<br>to PIC]
@@ -155,18 +162,22 @@ subgraph FINDING["📊 DASHBOARD TEMUAN"]
     F3 --> F4[Dashboard<br>Temuan]
 end
 
+%% ===================== TINDAK LANJUT =====================
 subgraph TINDAK["📈 MONITORING TINDAK LANJUT"]
     direction TB
     T1[🟡 Proses<br>TL] --> T2[Submit<br>Remediation]
     T2 --> T3[🔵 Pending<br>Verify]
     T3 --> T4{Verified?}
+
     T4 -->|Ya| T5[🟢 Closed]
     T4 -->|Tidak| T1
+
     T1 --> T6{Overdue?}
     T6 -->|Ya| T7[⚫ Escalate]
     T7 --> T1
 end
 
+%% ===================== ARSIP DIGITAL =====================
 subgraph ARSIP["📁 ARSIP DIGITAL"]
     direction TB
     A1[📄 LHA] --> A4[Repository<br>Terpusat]
@@ -176,20 +187,23 @@ subgraph ARSIP["📁 ARSIP DIGITAL"]
     A4 --> A6[📥 Export]
 end
 
+%% ===================== RELASI ANTAR MODUL =====================
 U5 --> P1
-P4 --> A3
+P3 --> F1
 R8 --> F1
 R9 --> F1
-P3 --> F1
 F4 --> T1
+P4 --> A3
 T5 --> A1
 
+%% ===================== STYLING =====================
 style RKPT fill:#fce7f3,stroke:#ec4899,color:#831843
 style PLAN fill:#ccfbf1,stroke:#14b8a6,color:#134e4a
 style RULES fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
 style FINDING fill:#fef3c7,stroke:#f59e0b,color:#78350f
 style TINDAK fill:#dcfce7,stroke:#22c55e,color:#166534
-style ARSIP fill:#e0e7ff,stroke:#6366f1,color:#3730a3`
+style ARSIP fill:#e0e7ff,stroke:#6366f1,color:#3730a3
+`
     },
 
     // ============================================
