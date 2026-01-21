@@ -99,7 +99,9 @@ const modul_kesekretariatan = {
     // ============================================
     diagram: {
         title: 'Diagram Alur - Sistem Kesekretariatan',
-        mermaid: `flowchart TB
+        mermaid: `flowchart LR
+
+%% ===================== SURAT MASUK =====================
 subgraph SM["📬 SURAT MASUK"]
     direction TB
     SM1[Surat Masuk] --> SM2[Registrasi &<br>Scan]
@@ -109,6 +111,7 @@ subgraph SM["📬 SURAT MASUK"]
     SM4 -->|Tidak| SM6[Arsip]
 end
 
+%% ===================== DISPOSISI =====================
 subgraph DSP["✍️ DISPOSISI"]
     direction TB
     DSP1[Inbox] --> DSP2[Review &<br>Instruksi]
@@ -120,6 +123,7 @@ subgraph DSP["✍️ DISPOSISI"]
     DSP7 --> DSP5
 end
 
+%% ===================== RAPAT =====================
 subgraph RAPAT["📅 MANAJEMEN RAPAT"]
     direction TB
     R1[📅 Jadwal<br>Rapat] --> R2[🏢 Booking<br>Ruangan]
@@ -134,6 +138,7 @@ subgraph RAPAT["📅 MANAJEMEN RAPAT"]
     R10 --> R8
 end
 
+%% ===================== SURAT KELUAR =====================
 subgraph SK["📤 SURAT KELUAR"]
     direction TB
     SK1[Draft] --> SK2[Review]
@@ -143,6 +148,7 @@ subgraph SK["📤 SURAT KELUAR"]
     SK4 --> SK5[Kirim]
 end
 
+%% ===================== KONTRAK =====================
 subgraph KTR["📋 KONTRAK"]
     direction TB
     KTR1[Input] --> KTR2[Review Legal]
@@ -152,14 +158,19 @@ subgraph KTR["📋 KONTRAK"]
     KTR4 -->|Tidak| KTR4
 end
 
+%% ===================== ARSIP =====================
+ARSIP[(🗄️ ARSIP)]
+
+%% ===================== FLOW ANTAR SUBGRAPH =====================
 SM5 --> DSP1
 DSP6 --> SK1
-SK5 --> ARSIP[(🗄️ ARSIP)]
+SK5 --> ARSIP
 SM6 --> ARSIP
 KTR3 --> ARSIP
 R6 --> ARSIP
 R7 --> DSP1
 
+%% ===================== STYLING =====================
 style SM fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
 style DSP fill:#dcfce7,stroke:#22c55e,color:#166534
 style RAPAT fill:#fce7f3,stroke:#ec4899,color:#831843

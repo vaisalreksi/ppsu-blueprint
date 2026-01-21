@@ -99,7 +99,9 @@ const modul_prsu = {
     // ============================================
     diagram: {
         title: 'Diagram Alur - Sistem Operasional PRSU',
-        mermaid: `flowchart TB
+        mermaid: `flowchart LR
+
+%% ===================== ALUR BOOKING =====================
 subgraph BOOKING["📝 ALUR BOOKING"]
     direction TB
     B1[Customer<br>Request] --> B2[Cek<br>Ketersediaan]
@@ -110,23 +112,29 @@ subgraph BOOKING["📝 ALUR BOOKING"]
     B6 --> B7[PENDING<br>APPROVAL]
 end
 
+%% ===================== APPROVAL =====================
 subgraph APPROVAL["✅ APPROVAL BERJENJANG"]
     direction TB
-    A1[Level 1<br>Staff/Manajer] --> A2{Approve?}
+    A1[Level 1<br>Staff / Manajer] --> A2{Approve?}
     A2 -->|Ya| A3{Level 2<br>Required?}
     A2 -->|Tidak| A4[❌ REJECTED]
+
     A3 -->|Ya| A5[Level 2<br>Kadiv]
     A3 -->|Tidak| A8[✅ APPROVED]
+
     A5 --> A6{Approve?}
     A6 -->|Ya| A7{Level 3<br>Required?}
     A6 -->|Tidak| A4
+
     A7 -->|Ya| A9[Level 3<br>Direktur]
     A7 -->|Tidak| A8
+
     A9 --> A10{Approve?}
     A10 -->|Ya| A8
     A10 -->|Tidak| A4
 end
 
+%% ===================== PAYMENT =====================
 subgraph PAYMENT["💰 PEMBAYARAN"]
     direction TB
     P1[Generate<br>Invoice] --> P2[Send to<br>Customer]
@@ -137,10 +145,15 @@ subgraph PAYMENT["💰 PEMBAYARAN"]
     P6 --> P7[Jurnal<br>Pendapatan]
 end
 
+%% ===================== NODE EKSTERNAL =====================
+KEU[(💰 MODUL<br>KEUANGAN)]
+
+%% ===================== ALUR ANTAR SUBGRAPH =====================
 B7 --> A1
 A8 --> P1
-P7 --> KEU[(💰 MODUL<br>KEUANGAN)]
+P7 --> KEU
 
+%% ===================== STYLING =====================
 style BOOKING fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
 style APPROVAL fill:#dcfce7,stroke:#22c55e,color:#166534
 style PAYMENT fill:#f3e8ff,stroke:#a855f7,color:#581c87

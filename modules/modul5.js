@@ -117,7 +117,9 @@ const modul_human_capital = {
     // ============================================
     diagram: {
         title: 'Diagram Alur - Sistem Human Capital',
-        mermaid: `flowchart TB
+        mermaid: `flowchart LR
+
+%% ===================== DATA INDUK PEGAWAI =====================
 subgraph DATA["👤 DATA INDUK PEGAWAI"]
     direction TB
     D1[Input<br>Biodata] --> D2[Kontrak<br>PKWT/PKWTT]
@@ -126,16 +128,19 @@ subgraph DATA["👤 DATA INDUK PEGAWAI"]
     D3 -->|Expired| D5[⚠️ Reminder<br>Perpanjang]
 end
 
+%% ===================== PRESENSI & CUTI =====================
 subgraph KEHADIRAN["📅 PRESENSI & CUTI"]
     direction TB
     K1[Clock In/<br>Out] --> K2[Rekap<br>Kehadiran]
     K2 --> K3[Hitung<br>Lembur]
+
     K4[Ajukan<br>Cuti] --> K5{Saldo<br>Cukup?}
     K5 -->|Ya| K6[Approval<br>Atasan]
     K5 -->|Tidak| K7[❌ Reject]
     K6 --> K8[Deduct<br>Saldo]
 end
 
+%% ===================== PAYROLL =====================
 subgraph PAYROLL["💰 PAYROLL & PPh 21"]
     direction TB
     P1[Gaji Pokok +<br>Tunjangan] --> P2[- Potongan<br>BPJS/Pinjaman]
@@ -145,6 +150,7 @@ subgraph PAYROLL["💰 PAYROLL & PPh 21"]
     P5 -->|OK| P6[Jurnal ke<br>Keuangan]
 end
 
+%% ===================== KPI =====================
 subgraph KPI["🎯 KPI KARYAWAN"]
     direction TB
     I1[Set Target<br>& Bobot] --> I2[Input<br>Realisasi]
@@ -152,6 +158,7 @@ subgraph KPI["🎯 KPI KARYAWAN"]
     I3 --> I4[Dashboard<br>Kinerja]
 end
 
+%% ===================== MERIT SYSTEM =====================
 subgraph MERIT["🎓 MERIT SYSTEM"]
     direction TB
     M1[📚 Training<br>Plan] --> M2[Pelaksanaan<br>& Evaluasi]
@@ -159,9 +166,11 @@ subgraph MERIT["🎓 MERIT SYSTEM"]
     M3 --> M4{Expired?}
     M4 -->|Ya| M5[⚠️ Reminder<br>Renewal]
     M4 -->|Tidak| M6[✅ Active]
+
     I4 --> M7[🏆 Reward<br>& Promosi]
 end
 
+%% ===================== DISIPLIN =====================
 subgraph DISIPLIN["⚠️ DISIPLIN & SANKSI"]
     direction TB
     S1[📝 Catat<br>Pelanggaran] --> S2{Tingkat?}
@@ -173,14 +182,19 @@ subgraph DISIPLIN["⚠️ DISIPLIN & SANKSI"]
     S5 --> S7
 end
 
+%% ===================== NODE EKSTERNAL =====================
+KEU[(💰 MODUL<br>KEUANGAN)]
+
+%% ===================== RELASI ANTAR MODUL =====================
 D4 --> K1
 D4 --> P1
 K2 --> P1
 K3 --> P1
-P6 --> KEU[(💰 MODUL<br>KEUANGAN)]
-I4 --> M7
+P6 --> KEU
+
 S7 --> I4
 
+%% ===================== STYLING =====================
 style DATA fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
 style KEHADIRAN fill:#dcfce7,stroke:#22c55e,color:#166534
 style PAYROLL fill:#fef3c7,stroke:#f59e0b,color:#78350f

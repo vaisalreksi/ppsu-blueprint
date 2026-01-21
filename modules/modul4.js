@@ -86,18 +86,23 @@ const modul_bagian_umum = {
     // ============================================
     diagram: {
         title: 'Diagram Alur - Sistem Bagian Umum',
-        mermaid: `flowchart TB
+        mermaid: `flowchart LR
+
+%% ===================== PROSES PENGADAAN =====================
 subgraph PROC["📦 PROSES PENGADAAN"]
     direction TB
     P1[Purchase<br>Requisition] --> P2{Budget<br>Check}
     P2 -->|OK| P3{Approval<br>Workflow}
     P2 -->|Over| P2A[Revisi /<br>Reject]
+
     P3 -->|< 10jt| P3A[Manajer<br>Umum]
-    P3 -->|10-50jt| P3B[Direktur<br>Terkait]
+    P3 -->|10–50jt| P3B[Direktur<br>Terkait]
     P3 -->|> 50jt| P3C[Direktur<br>Utama]
+
     P3A --> P4[RFQ ke<br>Vendor]
     P3B --> P4
     P3C --> P4
+
     P4 --> P5[Evaluasi<br>Penawaran]
     P5 --> P6[Purchase<br>Order]
     P6 --> P7[Good<br>Receipt]
@@ -105,6 +110,27 @@ subgraph PROC["📦 PROSES PENGADAAN"]
     P8 --> P9[Posting<br>AP]
 end
 
+%% ===================== INVENTORI =====================
+subgraph INV["📊 INVENTORI"]
+    direction TB
+    I1[Penerimaan<br>Barang] --> I2[Update<br>Stock]
+    I2 --> I3{Stock <br>Reorder?}
+    I3 -->|Ya| I4[🔔 Alert<br>Reorder]
+    I4 --> I5[Generate<br>PR Otomatis]
+    I3 -->|Tidak| I6[Pengeluaran<br>Barang]
+    I6 --> I2
+end
+
+%% ===================== VENDOR =====================
+subgraph VENDOR["👥 VENDOR MANAGEMENT"]
+    direction TB
+    V1[Master<br>Vendor] --> V2[Evaluasi<br>Kinerja]
+    V2 --> V3{Score<br>OK?}
+    V3 -->|Ya| V4[Approved<br>Vendor List]
+    V3 -->|Tidak| V5[⛔ Blacklist]
+end
+
+%% ===================== ASET =====================
 subgraph ASSET["🏷️ MANAJEMEN ASET"]
     direction TB
     A1[Input<br>Data Aset] --> A2[Generate<br>QR Code]
@@ -115,43 +141,32 @@ subgraph ASSET["🏷️ MANAJEMEN ASET"]
     A4 -->|Tidak| A6[Stock<br>Opname]
 end
 
-subgraph INV["📊 INVENTORI"]
-    direction TB
-    I1[Penerimaan<br>Barang] --> I2[Update<br>Stock]
-    I2 --> I3{Stock <<br>Reorder?}
-    I3 -->|Ya| I4[🔔 Alert<br>Reorder]
-    I4 --> I5[Generate<br>PR Otomatis]
-    I3 -->|Tidak| I6[Pengeluaran<br>Barang]
-    I6 --> I2
-end
-
+%% ===================== MAINTENANCE =====================
 subgraph MAINT["🔧 MAINTENANCE"]
     direction TB
     M1[Jadwal<br>Preventif] --> M2[Reminder<br>Otomatis]
     M2 --> M3[Eksekusi<br>Maintenance]
     M3 --> M4[Update<br>Histori]
+
     M5[Laporan<br>Kerusakan] --> M6[Diagnosa]
     M6 --> M3
 end
 
-subgraph VENDOR["👥 VENDOR MANAGEMENT"]
-    direction TB
-    V1[Master<br>Vendor] --> V2[Evaluasi<br>Kinerja]
-    V2 --> V3{Score<br>OK?}
-    V3 -->|Ya| V4[Approved<br>Vendor List]
-    V3 -->|Tidak| V5[⛔ Blacklist]
-end
+%% ===================== NODE EKSTERNAL =====================
+KEU[(💰 KEUANGAN<br>Fixed Asset)]
 
+%% ===================== RELASI ANTAR MODUL =====================
 P7 --> I1
 I5 --> P1
 P6 --> V2
-A1 --> KEU[(💰 KEUANGAN<br>Fixed Asset)]
+A1 --> KEU
 
+%% ===================== STYLING =====================
 style PROC fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
-style ASSET fill:#dcfce7,stroke:#22c55e,color:#166534
 style INV fill:#fef3c7,stroke:#f59e0b,color:#78350f
-style MAINT fill:#fce7f3,stroke:#ec4899,color:#831843
 style VENDOR fill:#f3e8ff,stroke:#a855f7,color:#581c87
+style ASSET fill:#dcfce7,stroke:#22c55e,color:#166534
+style MAINT fill:#fce7f3,stroke:#ec4899,color:#831843
 style KEU fill:#e0e7ff,stroke:#6366f1,color:#3730a3`
     },
 

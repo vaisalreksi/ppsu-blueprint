@@ -120,7 +120,9 @@ const modul_teknik = {
     // ============================================
     diagram: {
         title: 'Diagram Alur - Sistem Teknik dan Perencanaan',
-        mermaid: `flowchart TB
+        mermaid: `flowchart LR
+
+%% ===================== PBJ KONSTRUKSI =====================
 subgraph PBJ["📦 PBJ KONSTRUKSI"]
     direction TB
     J1[📊 Susun<br>HPS] --> J2{Nilai?}
@@ -132,6 +134,7 @@ subgraph PBJ["📦 PBJ KONSTRUKSI"]
     J3 --> J7
 end
 
+%% ===================== PROJECT LIFECYCLE =====================
 subgraph PROJECT["💼 PROJECT LIFECYCLE"]
     direction TB
     P1[📄 RAB<br>Penawaran] --> P2[Kontrak]
@@ -140,6 +143,7 @@ subgraph PROJECT["💼 PROJECT LIFECYCLE"]
     P4 --> P5[Progress<br>Tracking]
 end
 
+%% ===================== LOG KONSTRUKSI =====================
 subgraph LOG["📓 LOG KONSTRUKSI"]
     direction TB
     L1[📅 Daily<br>Log] --> L2[📦 Material<br>In/Out]
@@ -151,15 +155,18 @@ subgraph LOG["📓 LOG KONSTRUKSI"]
     L6 -->|Tidak| L8[✅ OK]
 end
 
+%% ===================== MONITORING =====================
 subgraph MONITOR["📹 MONITORING"]
     direction TB
     M1[CCTV<br>Live] --> M2[Remote<br>View]
+
     M3[S-Curve<br>Analysis] --> M4{SPI<br>Check}
     M4 -->|≥ 1.0| M5[🟢 On Track]
-    M4 -->|0.8-0.99| M6[🟡 Warning]
+    M4 -->|0.8–0.99| M6[🟡 Warning]
     M4 -->|< 0.8| M7[🔴 Critical]
 end
 
+%% ===================== BILLING =====================
 subgraph BILLING["💰 PENAGIHAN"]
     direction TB
     B1[Milestone<br>Achieved] --> B2[Generate<br>BAP]
@@ -168,16 +175,24 @@ subgraph BILLING["💰 PENAGIHAN"]
     B4 --> B5[Post ke<br>Keuangan]
 end
 
+%% ===================== NODE EKSTERNAL =====================
+KEU[(💰 MODUL<br>KEUANGAN)]
+RSK[(⚠️ MODUL<br>RISIKO)]
+
+%% ===================== RELASI ANTAR MODUL =====================
 J7 --> P1
 P5 --> L1
 P5 --> M1
 P5 --> M3
 L4 --> M3
+
 M5 --> B1
 M6 --> B1
-B5 --> KEU[(💰 MODUL<br>KEUANGAN)]
-L7 --> RSK[(⚠️ MODUL<br>RISIKO)]
 
+B5 --> KEU
+L7 --> RSK
+
+%% ===================== STYLING =====================
 style PBJ fill:#dcfce7,stroke:#22c55e,color:#166534
 style PROJECT fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
 style LOG fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
